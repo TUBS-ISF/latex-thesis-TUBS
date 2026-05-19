@@ -7,6 +7,7 @@
 \usepackage{libertine}
 
 \usepackage[english]{babel}
+\usepackage{hyperref}
 \usepackage{amsmath}
 \usepackage{amsfonts}
 \usepackage{amssymb}
@@ -19,7 +20,7 @@
 \usepackage{xcolor}
 \definecolor{primary}{RGB}{190, 30, 60}
 
-\usepackage[backend=bibtex,style=alphabetic,hyperref, sorting=ynt, sortcites=true, backref = true]{biblatex}
+\usepackage[backend=bibtex,style=alphabetic,sorting=ynt, sortcites=true, backref = true]{biblatex}
 \addbibresource{../literature/MYabrv.bib}
 \addbibresource{../literature/IEEEabrv.bib}
 \addbibresource{../literature/literature.bib}
@@ -28,6 +29,7 @@
     backrefpage  = {\color{primary}\lowercase{s}ee Page}, % for single page number
     backrefpages = {\color{primary}\lowercase{s}ee Pages} % for multiple page numbers
 }
+
 \usepackage[top=2.00cm, bottom=2.00cm, textwidth=450pt, includeheadfoot]{geometry}
 \usepackage[ddmmyyyy]{datetime}
 \renewcommand{\dateseparator}{.}
