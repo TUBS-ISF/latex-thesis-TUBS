@@ -17,6 +17,21 @@ This readme serves several purposes:
 
 The quickstart assumes you use the sample structure provided in this repository, including the sample files.
 
+### Reporting Errors
+
+If you notice any error in this template, please write an issue in the [GitHub-repository of this fork](https://github.com/TUBS-ISF/latex-thesis-TUBS). This helps us to fix the issue both for you and for any other student that uses the template.
+
+### Building the Thesis
+
+Please note, that you require `perl` to compile the document if you want to have a glossary (it should be part of texlive). The `makeglossaries` command does not work without it.
+
+Please use [latexmk](https://ctan.org/pkg/latexmk) to build this template (we have included a [`.latexmkrc`](.latexmkrc)).
+With it, simply running `latexmk` in the relevant folder should give you the thesis and proposal, `latexmk -c` should perform a (small) cleanup and `latexmk -pvc` should continuously compile the document (useful for live previews). If at any point you need to force a recompile, either use `latexmk -g` or `latexmk -gg` to retry.
+
+Most LaTeX editors (e.g., VS Code, TeXStudio, ...) can also be configured to use latexmk for compilation. This is the easiest and preferred solution. We also include a magic comment in the main file (`% !TeX program = latexmk`) that is understood by many editors. 
+
+We do not officially support building the thesis with Overleaf. It may work, but we do not provide any fixes for this compilation process.
+
 ### Understanding the Structure
 
 The template has the following structure, only the `thesis.cls` and the `_config` folder are essential for the template to work. The remaining files represent an example structure:
@@ -119,7 +134,7 @@ Now adapting the path the loaded document class, setting the `\thesisProfilesPat
 
 If you move the complete template to your own directory, there is technically nothing that has to be changed!
 
-You just may want to update the [.gitlab-ci.yml](.gitlab-ci.yml) file (moving it to the root folder and changing the working directory within) so it is still in effect and builds the thesis for you. To have the link to the latest build in the readme work, you should update the path to reflect wherever the build is stored.
+You just may want to update the [.gitlab-ci.yml](__deactivated__.gitlab-ci.yml) file (moving it to the root folder and changing the working directory within) so it is still in effect and builds the thesis for you. To have the link to the latest build in the readme work, you should update the path to reflect wherever the build is stored.
 
 If you still want to receive updates there is no "automated" way, so you probably have to do it via patches.
 You can create a [patch](https://git-scm.com/docs/git-apply) from the template repository using `git diff > myPatch.patch` and apply it to your repository using `git apply myPatch.patch`.
