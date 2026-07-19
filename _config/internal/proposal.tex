@@ -1,13 +1,79 @@
 \RequirePackage{pdfpages}
+\RequirePackage{pgfgantt}
 
 \def\makeproposalinclusion#1{
-    \AtEndDocument{
-        \cleardoublepage\thispagestyle{plain}\begingroup\section*{\translate{task}}
+        \cleardoublepage\begingroup\chapter{\translate{task}}\label{ch:task}
 
-       \translate{task-description}
+        \translate{task-description}
 
         \par\@sigskip\@signarea\thesis@voidpar\endgroup\bigskip\thesis@voidpar
-        \clearpage
-        \includepdf[pages=-, fitpaper]{#1}
+
+        \begin{refsection}
+        \input{#1}
+
+        {%
+        \defbibheading{bibliography}[\bibname]{\section*{\translate{bibliography}}}%
+        \printbibliography%
+        }%
+        \end{refsection}
+
+}
+
+\newcommand{\makeproposaltitle}{
+    {\begin{center}
+        {\LARGE Proposal --- \@title}\\
+        { \@thesistype's Thesis Proposal, \@author} \\
+    \end{center}
+
+    {\bfseries\ifnum\value{thesis@examiners}=1
+    \translate{advisor-singular}%
+    \else\ifnum\value{thesis@examiners}>1
+        \translate{advisor-plural}%
+        \fi\fi\smallskip}
+    \ifnum\value{thesis@examiners}>0
+    \begin{itemize}[leftmargin=*,nosep,itemsep=\smallskipamount]
+    \@examiners
+    \end{itemize}
+    \fi
+    \vskip.5cm
+        {\bfseries\ifnum\value{thesis@supervisors}=1
+    \translate{supervisor-singular}%
+    \else\ifnum\value{thesis@supervisors}>1
+        \translate{supervisor-plural}%
+        \fi\fi\smallskip}
+    \ifnum\value{thesis@supervisors}>0
+    \begin{itemize}[leftmargin=*,nosep,itemsep=\smallskipamount]
+    \@supervisors
+    \end{itemize}
+    \fi
+    \vskip.5cm
     }
 }
+
+\def\makeganttchart#1{
+    \ifdefstring{\thesis@type}{master-thesis}{%
+        \begin{center}
+            \begin{ganttchart}[hgrid, vgrid,expand chart=\textwidth, milestone/.append style={fill=@primary, rounded corners=3pt}, bar label font=\small, milestone label font=\footnotesize]{1}{24}
+			\gantttitle{Week}{24} \\
+            \gantttitlelist{1,...,24}{1} \\
+            #1
+            \end{ganttchart}
+        \end{center}
+    }{}
+
+    \ifdefstring{\thesis@type}{bachelor-thesis}{%
+        \begin{center}
+            \begin{ganttchart}[hgrid, vgrid,expand chart=\textwidth, milestone/.append style={fill=@primary, rounded corners=3pt}, bar label font=\small, milestone label font=\footnotesize]{1}{12}
+                \gantttitle{Week}{12} \\
+                \gantttitlelist{1,...,12}{1} \\
+                #1
+            \end{ganttchart}
+        \end{center}
+    }{}
+}
+
+\def\workpackage#1#2{%
+    \item \textbf{#1}\\%
+    #2%
+}%
+

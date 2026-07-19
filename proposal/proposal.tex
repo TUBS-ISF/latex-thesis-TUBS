@@ -1,77 +1,41 @@
-% !TeX program = latexmk
-\documentclass[10pt,a4paper,oneside]{article}
 
-\input{proposal_config}
+%TODO Change section numbers
+\section*{Introduction}
+In one to two pages, the introduction motivates the research topic and gives an overview over the related scientific work using citations~\cite{TBK:ICSE09}.
+The introduction starts with the significance of the  general research area and then leads reader attention step-wise to the area of the specific research problem of the thesis.
+That means that the introduction is structured like an inverted triangle, starting with the general research area and then focusing more and more on the specific context of the thesis.
 
+$\Rightarrow$ Why is your research important?
 
-\title{Example Title}
-\author{Author Name}
-\date{Planned Registration Date}
-\advisor{M.Sc. Your Advisor}
-\supervisor{Prof. Dr. Thomas Thüm}
-\thesistype{Bachelor} %Master
+\section*{Problem Statement}
+In three to four sentences, the problem statement describes the research problem the thesis aims to address.
 
+$\Rightarrow$ What problem does your research plan to solve?
 
-\begin{document}
-	\maketitle
+\section*{Contribution}
+In three to four sentences, the contributions section lists the planned scientific contributions of your work.
+This naturally includes the findings of your research, but can also include reusable data sets, newly created tools, \dots
 
-	\section{Introduction}
-	In one to two pages, the introduction motivates the research topic and gives an overview over the related scientific work using citations~\cite{TBK:ICSE09}.
-	The introduction starts with the significance of the  general research area and then leads reader attention step-wise to the area of the specific research problem of the thesis.
-	That means that the introduction is structured like an inverted triangle, starting with the general research area and then focusing more and more on the specific context of the thesis.
+$\Rightarrow$ How do you plan to address your research problem?
 
-	$\Rightarrow$ Why is your research important?
-	
-	\section{Problem Statement}
-	In three to four sentences, the problem statement describes the research problem the thesis aims to address.
+\subsection*{Work Packages}
 
-	$\Rightarrow$ What problem does your research plan to solve?
+\begin{enumerate}
+	\workpackage{WP1 -- First Work Package Headline}{
+		For each work package, you give a description of one to two sentences.
+	}
+	\workpackage{WP2 -- Second Work Package Headline}{
+		This helps you to structure the necessary steps to achieve your research goal.
+	}
+\end{enumerate}
 
-	\section{Contribution}
-	In three to four sentences, the contributions section lists the planned scientific contributions of your work.
-	This naturally includes the findings of your research, but can also include reusable data sets, newly created tools, \dots
+\subsection*{Schedule}
 
-	$\Rightarrow$ How do you plan to address your research problem?
-
-	\subsection{Work Packages}
-	
-	\begin{enumerate}
-		\item \textbf{WP1 -- First Work Package Headline}\\
-			For each work package, you give a description of one to two sentences.
-		\item \textbf{WP2 -- Second Work Package Headline}\\
-			This helps you to structure the necessary steps to achieve your research goal.
-	\end{enumerate}
-
-	\subsection{Schedule}
-	% FOR BACHELOR'S THESIS
-	\begin{center}
-		\begin{ganttchart}[hgrid, vgrid,expand chart=\textwidth, milestone/.append style={fill=primary, rounded corners=3pt}]{1}{12}
-			\gantttitle{Week}{12} \\
-			\gantttitlelist{1,...,12}{1} \\
-			\ganttbar{WP1}{1}{4} \\
-			\ganttmilestone{Intermediate presentation}{4} \\
-			\ganttbar{WP2}{5}{9} \\
-			\ganttbar{WP3}{7}{11} \\
-			\ganttbar{Buffer}{12}{12} \\
-			\ganttmilestone{Final presentation}{12}
-		\end{ganttchart}
-	\end{center}
-
-	% FOR MASTER'S THESIS
-%	\begin{center}
-%		\begin{ganttchart}[hgrid, vgrid,expand chart=\textwidth, milestone/.append style={fill=primary, rounded corners=3pt}]{1}{24}
-%			\gantttitle{Week}{24} \\
-%			\gantttitlelist{1,...,24}{1} \\
-%			\ganttbar{WP1}{1}{4} \\
-%			\ganttmilestone{Intermediate presentation}{6} \\
-%			\ganttbar{WP2}{5}{9} \\
-%			\ganttbar{WP3}{7}{11} \\
-%			\ganttbar{WP4}{11}{23} \\
-%			\ganttbar{Buffer}{24}{24} \\
-%			\ganttmilestone{Final presentation}{24}
-%		\end{ganttchart}
-%	\end{center}
-
-	% Literature
-	\printbibliography
-\end{document}
+\makeganttchart{
+	\ganttbar{WP1}{1}{4} \\
+	\ganttmilestone{Intermed.\ pres.}{4} \\ %Use 8 to 12 for Master
+	\ganttbar{WP2}{5}{9} \\
+	\ganttbar{WP3}{7}{11} \\
+	\ganttbar{Buffer}{12}{12} \\
+	\ganttmilestone{Final pres.}{12} %Use 24 for Master
+}
