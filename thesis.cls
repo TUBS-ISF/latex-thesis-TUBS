@@ -18,8 +18,6 @@
 \DeclareStringOption[\translate{computer-science}]{field}
 \DeclareBoolOption{print}
 \DeclareComplementaryOption{digital}{print}
-\DeclareBoolOption[true]{submission}
-\DeclareComplementaryOption{publishing}{submission}
 
 % layout
 \DeclareStringOption[10pt]{fontsize}

@@ -1,42 +1,4 @@
 % this titlepage does not use tikz for speed reason
-\ifthesis@submission%
-{\makeatletter
-\thispagestyle{empty}%
-\parskip\z@\relax\parindent\z@\relax
-%\vspace*{\fill}%
-\large\textbf{\translate{type-and-field}}\par\relax
-\begin{tabularx}{\linewidth}{@{}lX@{}}
-    Name:&\@author\\
-    \translate{title}:&\@title\\
-    \translate{course}:&\thesis@field\\
-    \translate{studentnumber}:&\@studentnumber\\
-    \translate{date-of-submission}:&\@date\\
-    \translate{institution}:&\@university
-\end{tabularx}\vskip1.25cm\par
-{\bfseries\ifnum\value{thesis@examiners}=1
-\translate{advisor-singular}%
-\else\ifnum\value{thesis@examiners}>1
-    \translate{advisor-plural}%
-    \fi\fi\smallskip}
-\ifnum\value{thesis@examiners}>0
-\begin{itemize}[leftmargin=*,nosep,itemsep=\smallskipamount]
-   \@examiners
-\end{itemize}
-\fi
-\vskip.5cm
-    {\bfseries\ifnum\value{thesis@supervisors}=1
-\translate{supervisor-singular}%
-\else\ifnum\value{thesis@supervisors}>1
-    \translate{supervisor-plural}%
-    \fi\fi\smallskip}
-\ifnum\value{thesis@supervisors}>0
-\begin{itemize}[leftmargin=*,nosep,itemsep=\smallskipamount]
-   \@supervisors
-\end{itemize}
-\fi
-}\clearpage\newpage\null\thispagestyle{empty}\newpage%
-\else%
-\fi%
 \begin{full-titlepage}%
    \makeatletter\ifthesis@fira\firabook\else\sffamily\fi\def\margin{1.5cm}%
     \parskip\z@\relax\parindent\z@\relax
@@ -78,21 +40,28 @@
     \par{% author name
       % TODO: authorfont
       \null\hfill\parbox{\dimexpr.8\linewidth-\margin}{%
-         \RaggedLeft\LARGE\itshape\strut\@author\strut
+         \RaggedLeft\LARGE\itshape\strut{\@author, \@studentnumber}\strut
       }\hskip\margin\null%
     }
     \vskip1cm
     \par{% footer
-      \colorbox{lightgray!25}{\parbox[t][90pt][c]{\paperwidth}{%
+      \colorbox{lightgray!25}{\parbox[t][100pt][c]{\paperwidth}{%
          \null\hfill\parbox{\dimexpr.8\linewidth-\margin}{%
-            \RaggedLeft\large\strut\@institute\strut
+            \vskip0.3cm
+             {\small\bfseries\RaggedLeft Examiners:\par}
+             \ifnum\value{thesis@examiners}>0
+             \begin{itemize}[leftmargin=*,nosep,itemsep=\smallskipamount,label={}]
+                 \RaggedLeft\small
+                \@examiners
+             \end{itemize}
+             \fi
          }\hskip\margin\null
       }}%
     }%
     \vskip-\baselineskip\par{% thesis type
       \fboxsep=3mm\relax
-      \null\hfill\smash{\raisebox{\dimexpr\thesis@marginpar@width+\fboxsep-.5\height-.5\depth}{\colorbox{@primary}{\hskip\dimexpr\margin-\fboxsep\relax
-         \color{white}\Large\translate{\thesis@type}%
+      \null\hfill\smash{\raisebox{\dimexpr\thesis@marginpar@width+\fboxsep-.5\height-.5\depth+18pt}{\colorbox{@primary}{\hskip\dimexpr\margin-\fboxsep\relax
+         \color{white}\Large\translate{\thesis@type} in \thesis@field%
       \hskip\dimexpr\margin-\fboxsep\relax}}}\null
     }%
 	% 		\node [above left = of banner.south east, anchor=south east, inner sep=2pt] {
