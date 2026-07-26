@@ -1,4 +1,4 @@
-@default_files = ('proposal.tex');            # `latexmk` should compile the thesis
+@default_files = ('proposal_main.tex');     # `latexmk` should compile the thesis
 $pdf_mode = 1;                              # use pdflatex
 $out_dir = './';                            # all the outputs will appear in this directory
 $postscript_mode = 0;                       # don't use postscript
