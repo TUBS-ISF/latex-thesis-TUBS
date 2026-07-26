@@ -1,4 +1,42 @@
 % this titlepage does not use tikz for speed reason
+\ifthesis@submission%
+{\makeatletter
+\thispagestyle{empty}%
+\parskip\z@\relax\parindent\z@\relax
+%\vspace*{\fill}%
+\large\textbf{\translate{type-and-field}}\par\relax
+\begin{tabularx}{\linewidth}{@{}lX@{}}
+    Name:&\@author\\
+    \translate{title}:&\@title\\
+    \translate{course}:&\thesis@field\\
+    \translate{studentnumber}:&\@studentnumber\\
+    \translate{date-of-submission}:&\@date\\
+    \translate{institution}:&\@university
+\end{tabularx}\vskip1.25cm\par
+{\bfseries\ifnum\value{thesis@examiners}=1
+\translate{advisor-singular}%
+\else\ifnum\value{thesis@examiners}>1
+    \translate{advisor-plural}%
+    \fi\fi\smallskip}
+\ifnum\value{thesis@examiners}>0
+\begin{itemize}[leftmargin=*,nosep,itemsep=\smallskipamount]
+   \@examiners
+\end{itemize}
+\fi
+\vskip.5cm
+    {\bfseries\ifnum\value{thesis@supervisors}=1
+\translate{supervisor-singular}%
+\else\ifnum\value{thesis@supervisors}>1
+    \translate{supervisor-plural}%
+    \fi\fi\smallskip}
+\ifnum\value{thesis@supervisors}>0
+\begin{itemize}[leftmargin=*,nosep,itemsep=\smallskipamount]
+   \@supervisors
+\end{itemize}
+\fi
+}\clearpage\newpage\null\thispagestyle{empty}\newpage%
+\else%
+\fi%
 \begin{full-titlepage}%
    \makeatletter\ifthesis@fira\firabook\else\sffamily\fi\def\margin{1.5cm}%
     \parskip\z@\relax\parindent\z@\relax
