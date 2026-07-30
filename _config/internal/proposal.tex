@@ -1,0 +1,13 @@
+\RequirePackage{pdfpages}
+
+\def\makeproposalinclusion#1{
+    \AtEndDocument{
+        \cleardoublepage\thispagestyle{plain}\begingroup\section*{\translate{task}}
+
+       \translate{task-description}
+
+        \par\@sigskip\@signarea\thesis@voidpar\endgroup\bigskip\thesis@voidpar
+        \clearpage
+        \includepdf[pages=-, fitpaper]{#1}
+    }
+}

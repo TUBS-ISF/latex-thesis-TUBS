@@ -1,11 +1,157 @@
 \setchaptertoc
 \chapter{Concept}\label{chp:concept}
-\csummary{Why even concepts?\csumnext Why even A?}
+\csummary{Why did we choose X instead of Y?\csumnext Why do we modify algorithm C?} %This command can be used to display short exemplary questions in the contents overview
 
 \begin{summary}
-The concept is\ldots
+Describe the conceptual work you did for your thesis.
 \end{summary}
 
-\section{Formalizing Penguins}
+\section{Thesis Commands Examples}
 
-\section{Penguin Composition}
+\begin{minted}{R}
+x <- list(i='hey', j='there')
+for(i in x) {
+   print(paste("x$i", x$i))
+}
+print(x)
+\end{minted}
+
+
+To interpret the program above, we take \bR{x <- 2} to the set of \gls{not:N}, \gls{not:Z}, and \gls{not:R} because they describe funny numbers that we can use to index what we call an \gls{ast} (if you want the long form use \texttt{\textbackslash glsac}: \glsac{ast}). Now we can use a \gls{cpo} or verify the \gls{def:behavioral-equivalence} with \glspl{formal:external-factor} when interpreting the code as a \Gls{formal:model} (see \gls{def:behavioral-equivalence}, sometimes called \gls{def:behavioral-equivalence}[foo bar]).
+\gls{not:N} will not be repeated on this page!
+
+Using the \texttt{\textbackslash glssym} macro defined in the preamble you can even color symbol uses such as \glssym{not:N} automatically if this is to your liking:
+\begin{align}
+    \glssym{not:N} &= \{1, 2, \ldots\} \\
+    \glssym{not:Z} &= \glssym{not:N} \cup \{0\} \cup \{-1, -2, \ldots\} \\
+    \glssym{not:R} &= \textit{Set of real numbers} \\
+    \glssym{not:C} &= \textit{Set of complex numbers} \\
+    \glssym{not:N} &\subset \glssym{not:Z} \subset \glssym{not:R} % \subset \glssym{not:C}
+\end{align}
+
+However, as you may see, \glssym{not:C} is not shown in the sidebar even though it appears first within the math mode. The reason(s) for this are manifold but in short we avoided this as math mode may be rendered multiple times.
+You can use \texttt{\textbackslash showsymbols} to propose a list of symbols to show before the math environment (using \texttt{\textbackslash showsymbols*} these will be forced as showcased below):
+\begin{align}
+    \showsymbols*{not:N,not:Z,not:R,not:C}
+    \glssym{not:N} &= \{1, 2, \ldots\} \\
+    \glssym{not:Z} &= \glssym{not:N} \cup \{0\} \cup \{-1, -2, \ldots\} \\
+    \glssym{not:R} &= \textit{Set of real numbers} \\
+    \glssym{not:C} &= \textit{Set of complex numbers} \\
+    \glssym{not:N} &\subset \glssym{not:Z} \subset \glssym{not:R} % \subset \glssym{not:C}
+\end{align}
+
+\clearpage
+\begin{figure}
+    \begin{subfigure}[c]{\linewidth}
+        \featureDiagramWithLegend{
+            Lego Manikin,abstract
+                [Headpiece,abstract,optional
+                    [Helmet,concrete,alternative]
+                    [Hat,concrete]]
+                [Head,concrete,mandatory]
+                [Item,abstract,optional
+                    [Brush,concrete,or]
+                    [Phone,concrete]]
+                [Shirt,concrete,mandatory]
+                [Pants,abstract,mandatory
+                    [Red,concrete,alternative]
+                    [Blue,concrete]]
+        }{
+            \node {$\text{Helmet} \Rightarrow \neg \text{Phone}$}; \\
+            \node {$\text{Red} \Rightarrow \text{Brush}$}; \\
+        }
+
+        \caption{Exemplary feature model. This illustrates the usage of the feature model }
+        \label{fig:first}
+    \end{subfigure}
+
+
+    \begin{subfigure}[c]{\linewidth}
+        \centering\includegraphics[width=0.15\linewidth]{img/example}
+        \caption{Second subfigure.}
+    \end{subfigure}
+    \caption[Main]{Main caption.}
+    \label{fig:main}
+\end{figure}
+
+A viable way to group different figures is the \textit{subfigures} command, a short example can be seen at \cref{fig:main}.
+This is \cref{fig:main} with the name \nameref{fig:main}.\footurl{www.google.com}{2024-12-24}
+See ulm university\foothref{https://web.archive.org/web/20241221140233/https://www.uni-ulm.de/}{https://www.uni-ulm.de/}{2024-12-21} for more information.
+
+\begin{table}
+    \caption{A simple table}
+    \begin{tabular}{cc}
+        \toprule
+        A & B \\
+        \midrule
+        1 & 2 \\
+        3 & 4 \\
+        \bottomrule
+    \end{tabular}
+    \label{tab:simple}
+\end{table}
+
+\begin{pseudo}[tbp]
+    \caption{Algo Good}
+    \label{fun:good-algo}
+    \begin{algorithm}[H]
+		\PreCode
+        \Input{x :: String}
+        \Output{y :: String}
+        \Output{z :: String}
+
+        \StartCode
+        \lIf{x \KwIs "hello"}{
+            \label{alg:important-line}\Return{"world"}
+        }
+        \While{true}{
+            \If{y \KwIs "world"}{
+                \Return{"hello"}
+            }
+        }
+        \Return{"goodbye"}
+    \end{algorithm}
+\end{pseudo}
+
+In the \nameref{fun:good-algo} algorithm \cref{fun:good-algo}, an important line is \AlgoLineRef{alg:important-line}.
+
+You can also reference default enumerate elements:
+
+\begin{enumerate}
+    \item \label{item:rando}First item
+    \item Second item
+\end{enumerate}
+
+With ref: \enquote{\ref{item:rando}}, on page \pageref{item:rando}, and cref: \enquote{\cref{item:rando}}.
+
+\needspace{5\baselineskip}
+But please, if there is any sense in doing so make use of, e.g., \texttt{ref} by \texttt{enumitem}:
+
+\begin{enumerate}[ref={Penguin Element \arabic*}]
+   \item \label{item:rando2}First item
+   \item Second item
+\end{enumerate}
+
+With ref: \enquote{\ref{item:rando2}}, on page \pageref{item:rando2}, and cref: \enquote{\cref{item:rando2}}.
+Using \texttt{\textbackslash newlist} you can also define your own lists, e.g., for research questions or contributions and give them your own ref names~--- see, e.g., \texttt{rqs} for an example.
+
+
+\begin{minted}[float,caption={A floating caption},label=jeah]{R}
+x <- list(i='hey', j='there')
+for(i in x) {
+   print(paste("x$i", x$i))
+}
+print(x)
+\end{minted}
+
+We can reference code as well, see: \cref{jeah}.
+
+This starts the paragraph.
+\aiquote{GPT-5.2}{
+    Generate a text snippets that symbolizes AI usage based on the ISF AI guidelines.
+}{
+    Worked quite well!
+}{
+    This paragraph symbolizes text generated with a type 2 AI tool that you want to use in your thesis. Please refer to the file \texttt{segments/ai-entries.tex} for section-wide and type 1 AI disclaimers.
+}
+This continues the paragraph afterwards

@@ -163,6 +163,7 @@
 \thesis@internal@load{chapter}
 \thesis@internal@load{license}
 \thesis@internal@load{floats}
+\thesis@internal@load{signature}
 \thesis@internal@load{titlepage}
 \RequirePackage{mathtools}
 \thesis@internal@load{hyperref}
