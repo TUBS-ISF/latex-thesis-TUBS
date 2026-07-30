@@ -119,14 +119,38 @@
    }%
 }
 
+% hide 'on page' refs for floats whose number already contains the page
+\newif\ifthesis@allfloatrefs
+\ifthesis@floatRefSidenotes
+\def\thesis@checkallfloatrefs#1{\thesis@allfloatrefsfalse}
+\else
+\@for\thesis@@type:={figure,subfigure,table,lstlisting,pseudo}\do{%
+   \csedef{thesis@hidepgref@\thesis@@type}{}%
+}
+\def\thesis@checkallfloatrefs#1{%
+   \thesis@allfloatrefstrue
+   \@for\thesis@@lbl:={#1}\do{%
+      \ifcsname r@\thesis@@lbl @cref\endcsname
+         \cref@gettype{\thesis@@lbl}{\thesis@@reftype}%
+         \ifcsname thesis@hidepgref@\thesis@@reftype\endcsname\else\thesis@allfloatrefsfalse\fi
+      \else
+         \thesis@allfloatrefsfalse
+      \fi
+   }%
+}
+\fi
+
 % optional argument is ONLY for varioref in case of the same page
 \newcommand*\modifiedcref[2][\reftextcurrent]{%
    \thesis@disablehyper{%
       \hyperref[#2]{\basicCref*{#2}}%
+      \thesis@checkallfloatrefs{#2}%
+      \ifthesis@allfloatrefs\else
          \ifinsidenote
             \space(\vpageref[#1]{#2})%
          \else
             \sideref[#1]{#2}%
+         \fi
       \fi
    }%
 }

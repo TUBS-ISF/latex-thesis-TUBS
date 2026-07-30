@@ -100,14 +100,14 @@ In case you want a multi-line title (or decide yourself where to break the title
 
 ### Most Important Commands
 
-There is only a small number of commands that you should know when working with this theses, everything else is packaged in what we call _modules_ which you can load (`\ThesisModule`) if you want functionality and styling which was useful for thesis writers before you. These modules provide you with styled support for [glossaries](#glossary), [pseudocode](#pseudocode), [listings](#listings), and more (see the [included modules](#included-modules)).
+There is only a small number of commands that you should know when working with this thesis, everything else is packaged in what we call _modules_ which you can load (`\ThesisModule`) if you want functionality and styling which was useful for thesis writers before you. These modules provide you with styled support for [glossaries](#glossary), [pseudocode](#pseudocode), [listings](#listings), and more (see the [included modules](#included-modules)).
 
 - _Links:_\
   We use the [cleveref][] package to provide you with the `\cref` command for linking. So instead of `\label{marker}...\autoref{marker}` you can use `\label{marker}...\cref{marker}`. If you want to link to a specific section, you can use the `\link` command: `\link{sec:mysec}{Super Text}`. If you want to link to a specific section and do not want the link to be highlighted, you can use `\link*{sec:mysec}{Super Text}` ([hyper references module](#hyper-references)).
 - _Chapters:_\
    Before each chapter, you can use `\setchaptertoc` to have a mini table of contents in the sidebar. After starting each `\chapter`, you can use `\csummary` to provide a summary of the chapter in the main table of contents ([chapter module](#chapters-and-minitocs)). Additionally, the `summary` environment is intended to be used at the start of every chapter to provide a short overview of what is to be presented in the chapter. This environment does minor space compensation and prohibits references from occurring in the sidebar (to avoid clutter).
 - _Sidebar:_\
-   This theses often writes into the sidebar, and you may find that unhelpful or annoying from time to time, you can use `\disablesidetrue` to disable all sidebar writing commands from now on (and `\disablesidefalse` to re-enable them). If you just want to disable it for a set of commands, you can also use `\noside{...}` ([marginpar module](#marginpars)).
+   This template often writes into the sidebar, and you may find that unhelpful or annoying from time to time, you can use `\disablesidetrue` to disable all sidebar writing commands from now on (and `\disablesidefalse` to re-enable them). If you just want to disable it for a set of commands, you can also use `\noside{...}` ([marginpar module](#margin-paragraphs)).
 
 Besides those, there are many others, for example, the [units module](#units) provides you with a nice and easy way to typeset SI units.
 
@@ -127,8 +127,13 @@ If you use this thesis as a submodule, you can update it using the following com
 git submodule update --remote --merge <path/to/the/submodule>
 ```
 
-To get started, you probably should copy several files and folders, essentially everything except the [thesis.cls](thesis.cls) file and the [_config](_config/) folder which compromise the template itself.
-Now adapting the path the loaded document class, setting the `\thesisProfilesPath{...}` should be enough to get the template to work (yet, depending on what you copy, setting the `configpath` document class option may suffice too, see the [common module](#the-common-module) for more information).
+To get started, you probably should copy several files and folders, essentially everything except the [thesis.cls](thesis.cls) file and the [_config](_config/) folder which comprise the template itself.
+Now adapting the path to the loaded document class and redefining `\thesisProfilesPath` (the folder of the active profile) _before_ `\documentclass` should be enough to get the template to work (yet, depending on what you copy, setting the `configpath` document class option may suffice too, see the [common module](#the-common-module) for more information):
+
+```latex
+\newcommand*\thesisProfilesPath{<submodule>/_config/profiles/uulm-sp}
+\documentclass[configpath=<submodule>/_config]{<submodule>/thesis}
+```
 
 #### Working from a Different Directory
 
@@ -181,7 +186,7 @@ You can load the other modules by using, for example, `\ThesisModule{authenticit
 | ✓  | [Tables](#tables)                                           | Configure the styling of tables                                                        | [tables.tex](_config/internal/tables.tex)             |
 | ✓  | [Task Description](#task-description)                       | Appends a signed task description and your proposal                                    | [proposal.tex](_config/internal/proposal.tex)         |
 | ✓  | [Titlepage](#titlepage)                                     | Styling for the titlepage                                                              | [titlepage.tex](_config/internal/titlepage.tex)       |
-| ✓  | [Translations](#translations)                               | Provide translation support for the template/document                                  | [translations.tex](_config/internal/translations.tex) |
+| ✓  | [translation.tex](_config/internal/translation.tex)         | Provide translation support for the template/document                                  | [translations.tex](_config/internal/translations.tex) |
 |    | [Units](#units)                                             | Provide support for (si-)units                                                         | [units.tex](_config/internal/units.tex)               |
 
 #### The Common Module
@@ -198,7 +203,9 @@ Of course, not all options are equally important. Those of importance are at the
 |:----------------- |:--------------|:-----------------------------------------------------------------------------------------------------------------------------------------------|
 | `citeInMarginpar` | true          | If set to false, citations will not appear in the marginpar (see [bibliography support](#bibliography-support)).                               |
 | `draft`           | false         | If set to true, the document will be compiled in draft mode (showing overfull boxes, ...).                                                     |
-| `enhanceMath`     | true          | Load advanced math fonts (see [fonts](#fonts)).                                                                                                |
+| `enhanceMath`     | true          | Load advanced math fonts (see [fonts](#fonts)).                                                                                                 |
+| `field`           | computer science | The field of study shown on the titlepage (translated by default).                                                                          |
+| `floatRefSidenotes` | auto        | Whether references to floats produce `on page` sidenotes. With `auto` they only appear if `pageInFloatRef` is `false`, as the `13A` numbering already encodes the page. |
 | `license`         | CCBY          | The license to use for the document (see [licensing](#licensing)).                                                                             |
 | `pageInFloatRef`  | true          | This automatically activates the effects of the [floats module](#floats). If you set this to `false` you get the default LaTeX numbering.      |
 | `profile`         | tubs-isf      | The profile to use for the document.                                                                                                           |
@@ -211,15 +218,17 @@ Of course, not all options are equally important. Those of importance are at the
 | `fira`            | true          | If set to false, the document will be compiled without the fira font (see [fonts](#fonts)).                                                    |
 | `fontsize`        | 10pt          | The font size of the document (only change when agreed with your supervisor).                                                                  |
 | `hyperref`        | true          | If set to false, the document will be compiled without hyper references (complements `nohyperref`, see [hyper references](#hyper-references)). |
+| `marginpar`       | true          | If set to false, the document will be compiled without the margin column (complements `nomarginpar`, no longer fully supported).               |
 | `nohyperref`      | false         | If set to true, the document will be compiled without hyper references (complements `hyperref`, see [hyper references](#hyper-references)).    |
+| `nomarginpar`     | false         | If set to true, the document will be compiled without the margin column (complements `marginpar`, no longer fully supported).                  |
+| `notomath`        | true          | If set to false, the document will be compiled without the notomath font, using mathpazo (see [fonts](#fonts)).                                |
 | `oneside`         | true          | If set to true, the document will be compiled in oneside mode (complements `twoside`).                                                         |
 | `palatino`        | true          | If set to false, the document will be compiled without the palatino font (see [fonts](#fonts)).                                                |
-| `notomath`        | true          | If set to false, the document will be compiled without the notomath font, using mathpazo (see [fonts](#fonts)).                                |
 | `paper`           | a4            | The paper size of the document (only change when agreed with your supervisor).                                                                 |
 | `print`           | false         | If set to true, the document will be compiled in print mode (complements the digital option).                                                  |
 | `rmtitle`         | true          | If set to false, the document will be compiled with a sans-serif title (see [fonts](#fonts), complements `sftitle`).                           |
 | `sftitle`         | false         | If set to true, the document will be compiled with a sans-serif title (see [fonts](#fonts), complements `rmtitle`).                            |
-| `twoside`         | false         | If set to false, the document will be compiled in oneside mode (complements `oneside`).                                                        |
+| `twoside`         | false         | If set to true, the document will be compiled in twoside mode (complements `oneside`).                                                         |
 
 <details>
 <summary>Tree-View of these Options</summary>
@@ -246,9 +255,13 @@ flowchart TD
     meta --- type("`<code>type</code>`")
     meta --- verbose("`<code>verbose</code>`")
     meta --- configpath("`<code>configpath</code>`")
+    meta --- field("`<code>field</code>`")
 
     layout --- citeInMarginpar("`<code>citeInMarginpar</code>`")
     layout --- paper("`<code>paper</code>`")
+    layout --- marginpars{{marginpars}}
+    marginpars --- marginpar("`<code>marginpar</code>`")
+    marginpars --- nomarginpar("`<code>nomarginpar</code>`")
     layout --- pages{{pages}}
     pages --- oneside("`<code>oneside</code>`")
     pages --- twoside("`<code>twoside</code>`")
@@ -268,6 +281,7 @@ flowchart TD
     hyperlinks --- hyperref("`<code>hyperref</code>`")
     hyperlinks --- nohyperref("`<code>nohyperref</code>`")
     references --- pageInFloatRef("`<code>pageInFloatRef</code>`")
+    references --- floatRefSidenotes("`<code>floatRefSidenotes</code>`")
 ```
 
 </details>
@@ -291,7 +305,7 @@ The main macro `\makedeclarationofauthenticity` automatically inserts this page 
 To digitally typeset the date and location, you can set them like this:
 
 ```latex
-\setdeclarationlocation{Ulm}
+\signaturelocation{Ulm}
 \signaturedate{2025-12-30}
 ```
 
@@ -360,7 +374,7 @@ For an example, have a look at the color definition of the `uulm-sp` profile in 
 
 #### Useful Environments
 
-Originally, this module provided much more, a huge collection of macros which the original author (me&nbsp;✨) found useful in his thesis. However, as these require a lot of getting-used-to, they have been removed from this setup. What remains are four environments (which you can find in the aforementioned [master thesis](http://dx.doi.org/10.18725/OPARU-50107) as well):
+Originally, this module provided much more, a huge collection of macros which the original author (me&nbsp;✨) found useful in his thesis. However, as these require a lot of getting-used-to, they have been removed from this setup. What remains are five environments (which you can find in the aforementioned [master thesis](http://dx.doi.org/10.18725/OPARU-50107) as well):
 
 - `abstract`: Provides an abstract section for the document.
 - `acknowledgements`: Provides an acknowledgements section for the document.
@@ -374,6 +388,7 @@ This module uses the [caption](https://ctan.org/pkg/caption) and the [subcaption
 For example, it causes figures and tables to follow a non-standard numbering scheme which uses the page number as well as the occurrence count of a float of that type on that page. While this sounds complicated, `Figure 13A` simply states that this is the first figure on page&nbsp;13, `Figure 13B` would be the second, and so on (fight me on this being a much better naming scheme for floats).
 If you (for whatever unfathomable reason) dislike this scheme, the [document class option](#the-common-module) `pageInFloatRef` can be set to false to revert to the default LaTeX numbering.
 This still leaves you with the tools to register your own (see below), but disables the automatic hooks into the float environments.
+As the scheme already encodes the page, references to floats do not produce `on page` sidenotes with it &mdash; use the `floatRefSidenotes` option to control this explicitly.
 
 You can use the float environments (`figure`, `table`, ...) as well as captions (`\caption`, ...) as usual. Usually we try to place captions for figures below the graphic, while we place captions before/above tables.
 
@@ -391,7 +406,7 @@ You can use the float environments (`figure`, `table`, ...) as well as captions 
 \end{figure}
 ```
 
-The caption will be the long version ("The great Divider of..."), while the list of figures will only show the short "The Divider" caption alternative. Within your document, you can refer to the figure using `\cref{fig:divider}` or `\namecref{fig:divider}` (which will print "Figure&nbsp;13A" or "The Divider" respectively).
+The caption will be the long version ("The great Divider of..."), while the list of figures will only show the short "The Divider" caption alternative. Within your document, you can refer to the figure using `\cref{fig:divider}` or `\nameref{fig:divider}` (which will print "Figure&nbsp;13A" or "The Divider" respectively).
 
 </details>
 
@@ -413,7 +428,7 @@ The caption will be the long version ("The great Divider of..."), while the list
 \end{table}
 ```
 
-Usually, the caption is placed above the table, to take the role of a "title". Similar to the figure, you can refer to the table using `\cref{tab:simple}` or `\namecref{tab:simple}`.
+Usually, the caption is placed above the table, to take the role of a "title". Similar to the figure, you can refer to the table using `\cref{tab:simple}` or `\nameref{tab:simple}`.
 See the [tables module](#tables) for more information on tables.
 
 </details>
@@ -453,7 +468,7 @@ _Include the [glossary module](_config/internal/glossary.tex) with `\ThesisModul
 Combining the [glossaries-accsupp](https://ctan.org/pkg/glossaries-accsupp) and the [glossary-longragged](https://ctan.org/pkg/glossaries) package, this module provides (margin paragraph aware) support for glossaries. You can use all glossary commands as usual.
 
 The default setup provides you with normal glossaries, acronyms, and symbols ("notation"),
-have a look at the default [segments/glossary.tex](_config/segments/glossary.tex) file provided for sample definitions, and the [segments/introduction.tex](_config/segments/introduction.tex) file for a sample usage. Similar to the [bibliography module](#bibliography-support),
+have a look at the default [segments/glossary.tex](segments/glossary.tex) file provided for sample definitions, and the [segments/introduction.tex](segments/introduction.tex) file for a sample usage. Similar to the [bibliography module](#bibliography-support),
 `\noside{...}` and `\disablesidetrue` can be used to prevent glossary entries from appearing in the marginpar. Additionally, `\sidesymbol{...}` can be used to place a symbol (only) in the marginpar. Especially to show multiple symbols we offer `\showsymbols{...,...,...}` (which may be followed by an optional star to force their appearance).
 
 Besides those changes there is another, arguably opinionated change, which I (at least used to) feel relatively strongly about: custom replacement texts. If I have a glossary entry, for let's say "dataflow analysis" and I want to quote it in another context where "dataflow" suffices (e.g., in "dataflow and control flow analysis"), glossaries usually require you to either print the full term or to use one of their user fields to overwrite the text.

@@ -32,6 +32,7 @@
 \DeclareBoolOption[false]{sftitle}
 \DeclareComplementaryOption{rmtitle}{sftitle}
 \DeclareBoolOption[true]{pageInFloatRef}
+\DeclareStringOption[auto]{floatRefSidenotes}
 
 % links
 \DeclareBoolOption[true]{hyperref}
@@ -44,6 +45,20 @@
 \DeclareBoolOption[true]{fira}
 
 \ProcessKeyvalOptions*
+
+\newif\ifthesis@floatRefSidenotes
+\def\thesis@@val{auto}
+\ifx\thesis@floatRefSidenotes\thesis@@val
+    \ifthesis@pageInFloatRef\else\thesis@floatRefSidenotestrue\fi
+\else
+    \def\thesis@@val{true}%
+    \ifx\thesis@floatRefSidenotes\thesis@@val\thesis@floatRefSidenotestrue\else
+        \def\thesis@@val{false}%
+        \ifx\thesis@floatRefSidenotes\thesis@@val\else
+            \thesis@error{Invalid value '\thesis@floatRefSidenotes' for option floatRefSidenotes}{Please use 'true', 'false', or 'auto'.}%
+        \fi
+    \fi
+\fi
 % endregion
 
 % region deal with verbose
@@ -72,8 +87,9 @@
 
 % region load data
 \def\thesis@internal@path{internal/}
-\def\thesis@profiles@path{profiles/\thesis@profile}
-\let\thesisProfilesPath\thesis@profiles@path
+% may be defined before \documentclass to relocate the profile folder
+\providecommand*\thesisProfilesPath{profiles/\thesis@profile}
+\def\thesis@profiles@path{\thesisProfilesPath}
 
 \def\thesis@load@profile#1{%
     \InputIfFileExists{\thesis@profiles@path/#1.tex}{%

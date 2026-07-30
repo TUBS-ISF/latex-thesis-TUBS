@@ -30,6 +30,12 @@
 
 \crefname{lstlisting}{Listing}{Listings}%
 \Crefname{lstlisting}{Listing}{Listings}%
+\ifthesis@hyperref\@ifundefined{thesis@toc@entry}{}{%
+\DeclareTOCStyleEntries[
+  entrynumberformat=\thesis@toc@entrynumber,
+  entryformat=\thesis@toc@entry,
+  pagenumberformat=\thesis@toc@pagenumber
+]{tocline}{lstlisting}}\fi
 
 \DeclareCommandCopy\thesis@lstlistoflistings\lstlistoflistings
 \def\lstlistoflistings{\bgroup\hypersetup{allcolors=.}\noside{\thesis@lstlistoflistings}\egroup}

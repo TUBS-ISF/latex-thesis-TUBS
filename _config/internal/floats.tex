@@ -104,7 +104,14 @@
 \def\thefigure{\@formatcounter f{\c@figure@lb}}
 \def\thetable{\@formatcounter t{\c@table@lb}}
 % this has to happen very late because... well... thank you listings
-\AddToHook{begindocument/end}{\def\thelstlisting{\@formatcounter l{\c@lstlisting@lb}}}
+\AddToHook{begindocument/end}{%
+  \def\thelstlisting{\@formatcounter l{\c@lstlisting@lb}}%
+  \let\thesis@orig@lstmakecaption\lst@MakeCaption
+  \def\lst@MakeCaption#1{%
+    \ifx #1t\ifx\lst@@caption\@empty\else\thesissetlst\fi\fi
+    \thesis@orig@lstmakecaption{#1}%
+  }%
+}
 \fi
 
 \def\makelongrefs{%
