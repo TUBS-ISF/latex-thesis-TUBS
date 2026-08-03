@@ -1,0 +1,74 @@
+% !TeX program = latexmk
+\documentclass[
+    configpath={../_config},
+    profile=tubs-isf,
+    verbose,
+    english,
+    type=bachelor-thesis, % master-thesis %TODO
+    field={{Computer Science}}, % change to your course of study/program %TODO
+    license=CCBY, % CCBY, CCBYSA, CCBYNC, CCBYNCSA; open an issue if you need another license
+%sftitle,  % sans-serif titles
+    paper=a4,  % forces A4 format
+%twoside,   % twosided layout
+%draft,    % omit title page, listings, and particular chapters selected below using include only
+%print,    % the printed version does not use colored links
+    pageInFloatRef=false % if you want to have the default names for floats instead of <page><Letter>
+%notomath=false % do not use noto math as a font but fallback to the mathpazo alternative
+]{../thesis}
+
+
+\addbibresource{../literature/MYabrv.bib}
+\addbibresource{../literature/IEEEabrv.bib}
+\addbibresource{../literature/literature.bib}
+\addbibresource{../literature/additions.bib}
+\ThesisModule{proposal}
+
+
+% do you have a glossary?
+\ThesisModule{glossary}
+\loadglsentries{../segments/glossary.tex}
+% do you want colored glossary symbols in the document?
+\def\glssym#1{{\color{purple!80!blue}\gls{#1}}}
+
+\input{../metadata}
+
+\makeatletter
+\newcommand\makeintproposaltitle{
+    {\begin{center}
+        {\LARGE Proposal --- \@title}
+    \end{center}
+
+
+    Author: \qquad \@author
+
+    {\bfseries\ifnum\value{thesis@examiners}=1
+    \translate{advisor-singular}%
+    \else\ifnum\value{thesis@examiners}>1
+        \translate{advisor-plural}%
+        \fi\fi}
+    \ifnum\value{thesis@examiners}>0
+    \begin{itemize}[leftmargin=*,nosep,itemsep=\smallskipamount]
+    \@examiners
+    \end{itemize}
+    \fi
+
+
+        {\bfseries\ifnum\value{thesis@supervisors}=1
+    \translate{supervisor-singular}%
+    \else\ifnum\value{thesis@supervisors}>1
+        \translate{supervisor-plural}%
+        \fi\fi}
+    \ifnum\value{thesis@supervisors}>0
+    \begin{itemize}[leftmargin=*,nosep,itemsep=\smallskipamount]
+    \@supervisors
+    \end{itemize}
+    \fi
+    }} % Note the extra }
+\makeatother
+
+\begin{document}
+    \makeintproposaltitle
+    \input{proposal} % for proposal inclusion
+
+    \printbibliography
+\end{document}
