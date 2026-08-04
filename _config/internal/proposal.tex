@@ -54,7 +54,7 @@
     \ifdefstring{\thesis@type}{master-thesis}{%
         \begin{center}
             \begin{ganttchart}[hgrid, vgrid,expand chart=\textwidth, milestone/.append style={fill=@primary, rounded corners=3pt}, bar label font=\small, milestone label font=\footnotesize]{1}{24}
-			\gantttitle{Week}{24} \\
+			\gantttitle{\translate{week}}{24} \\
             \gantttitlelist{1,...,24}{1} \\
             #1
             \end{ganttchart}
@@ -64,7 +64,7 @@
     \ifdefstring{\thesis@type}{bachelor-thesis}{%
         \begin{center}
             \begin{ganttchart}[hgrid, vgrid,expand chart=\textwidth, milestone/.append style={fill=@primary, rounded corners=3pt}, bar label font=\small, milestone label font=\footnotesize]{1}{12}
-                \gantttitle{Week}{12} \\
+                \gantttitle{\translate{week}}{12} \\
                 \gantttitlelist{1,...,12}{1} \\
                 #1
             \end{ganttchart}

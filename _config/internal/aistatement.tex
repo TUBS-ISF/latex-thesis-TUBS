@@ -39,22 +39,22 @@
     \translate{ai-description}
     \par\@sigskip\@signarea\thesis@voidpar\endgroup\bigskip\thesis@voidpar
 
-    \section*{Instance Listing}
-    \subsection*{Type 1 AI Systems}
+    \section*{\translate{instancel}}
+    \subsection*{\translate{t1ai}}
     \ifbool{thesis@aionetog}{%
         \renewcommand{\do}[1]{\@aientry##1}
         \dolistloop{\thesis@aione}%
     }{%
-        No use of type 1 AI tools reported.
+        \translate{nouse}
     }
 
 
-    \subsection*{Type 2 AI Systems}
+    \subsection*{\translate{t2ai}}
     \ifbool{thesis@aitwotog}{%
         \renewcommand{\do}[1]{\@aientry##1}
         \dolistloop{\thesis@aitwo}%
     }{%
-        No use of type 2 AI tools reported.
+        \translate{nouse}
     }
 
 }
