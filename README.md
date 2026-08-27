@@ -2,52 +2,35 @@
 
 [![Static Badge](https://img.shields.io/badge/LaTeX-Inside-blue?style=for-the-badge&labelColor=darkorange&color=white)](https://www.latex-project.org/)
 
-## Mirrors
-
-This repository is available at the following locations:
-
-- Main repo: <https://gitlab.uni-ulm.de/sp/sp-thesis-package/latex/thesis> (login required)
-- Mirror 1: <https://github.com/Fancy-Templates/latex-thesis>
-- Mirror 2: <https://spgit.informatik.uni-ulm.de/teaching/sp-thesis-package/latex/thesis> (login required)
-
-The mirrors allow for forking on github or internal gitlab (see below [Setting Up](#setting-up)).
+This template is adaption of the [LaTeX-Thesis template by Florian Sihler](https://github.com/Fancy-Templates/latex-thesis) for TU Braunschweig.
 
 ## Introduction
 
-This thesis template was originally designed for bachelor's and master's theses at [Ulm University][sp-institute], but can be easily adapted to other universities and, e.g., doctoral dissertations.
 This readme serves several purposes:
 
-1. [Setting Up](#setting-up):\
-   Explain how you can set up your own thesis repository based on this template
-2. [Quickstart](#quickstart):\
+1. [Quickstart](#quickstart):\
    Give a quickstart explanation on how to get started writing your thesis (including [best practices](#best-practices))
-3. [Full Reference](#full-reference):\
+2. [Full Reference](#full-reference):\
    Provide a more thorough reference of the commands and environments provided by the template
-
-See the [ai-rules-uulm.md][ai-rules] for the rules regarding the use of AI in theses specifically at Ulm University. Have a look at the [rep-package-guidelines.md][rep-package] for the guidelines regarding reproducibility packages for theses. Finally, consider the [writing guidelines][writing-guidelines].
-
-For a complete description of the current process writing a thesis at the [SP Institute](https://www.uni-ulm.de/in/sp) at Ulm University, we refer to the corresponding [Moodle course](https://moodle.uni-ulm.de/course/view.php?id=26468) (login required).
-
-
-> Originally, I ([Florian][homepage]) created the basis of this template for my [bachelor's thesis][doi-ba] and minified it on request for my [master's thesis][doi-ma]. Even though I invested a lot of effort since then to make it standalone (and much, much, much easier to use), there are still some parts that are not as polished as they should be (and many modules not ported).
->
-> If you encounter any problem, please write me an [email](mailto:florian.sihler@uni-ulm.de) or open an issue!
-> The same holds for feature and documentation request, do not hesitate to open a new issue on [github][new-issue-github] or [UUlm gitlab][new-issue-gitlab]!
-
-## Setting Up
-
-The main idea of using this thesis is in a clone-and-own fashion. So you may either
-
-- fork ([GitLab](https://docs.gitlab.com/ee/user/project/repository/forking_workflow.html), [GitHub](https://docs.github.com/en/pull-requests/collaborating-with-pull-requests/working-with-forks/fork-a-repo)) this repository (or have it forked by your supervisor), or
-- create a new repository ([GitLab](https://docs.gitlab.com/ee/user/project/), [GitHub](https://docs.github.com/en/repositories/creating-and-managing-repositories/creating-a-new-repository)) initialized with this template.
-
-We prefer forking, as it allows you to keep the history of the template and directly pull in changes from the template (if you want to).
-
-In case you want to use this template as a submodule or within another directory (e.g., because you do not want a separate repository for the thesis) please see the [alternative setup](#alternative-setup) section below.
 
 ## Quickstart
 
 The quickstart assumes you use the sample structure provided in this repository, including the sample files.
+
+### Reporting Errors
+
+If you notice any error in this template, please write an issue in the [GitHub-repository of this fork](https://github.com/TUBS-ISF/latex-thesis-TUBS). This helps us to fix the issue both for you and for any other student that uses the template.
+
+### Building the Thesis
+
+Please note, that you require `perl` to compile the document if you want to have a glossary (it should be part of texlive). The `makeglossaries` command does not work without it.
+
+Please use [latexmk](https://ctan.org/pkg/latexmk) to build this template (we have included a [`.latexmkrc`](.latexmkrc)).
+With it, simply running `latexmk` in the relevant folder should give you the thesis and proposal, `latexmk -c` should perform a (small) cleanup and `latexmk -pvc` should continuously compile the document (useful for live previews). If at any point you need to force a recompile, either use `latexmk -g` or `latexmk -gg` to retry.
+
+Most LaTeX editors (e.g., VS Code, TeXStudio, ...) can also be configured to use latexmk for compilation. This is the easiest and preferred solution. We also include a magic comment in the main file (`% !TeX program = latexmk`) that is understood by many editors. 
+
+We do not officially support building the thesis with Overleaf. It may work, but we do not provide any fixes for this compilation process.
 
 ### Understanding the Structure
 
@@ -72,26 +55,20 @@ Please note that the segments are just a generic suggestion, it is probably best
 ### Best Practices
 
 We strongly recommend you follow these practices (discussed with your supervisor).
-Please also consider the [writing guidelines][writing-guidelines] for the SP Institute at Ulm University.
 
 #### General Notes
 
 It is up to you and your supervisor whether you want to use the structure provided in this template (especially with regard to the files in the [segments](segments/) folder).
-In general, we block the `thesis.pdf` and a `signature` image (see the [declaration of authenticity](#declaration-of-authenticity) module) from being committed to the repository ([.gitignore](.gitignore)) and even if you rename that main file you should refrain from pushing compiled (blobs/) files to the repository to avoid cluttering it.
+In general, we block the `signature` image (see the [declaration of authenticity](#declaration-of-authenticity) module) from being committed to the repository ([.gitignore](.gitignore)). Please discuss with your supervisor, whether you should also commit the thesis and proposal PDF file.
 
 #### Citations and Bibliography
 
-Whenever possible, try to use the bibliography entries provided by <https://dblp.org/> and ensure that a [DOI](https://www.doi.org/) is available for the respective entry (ask your supervisor whether a procured bibliography for important references is already available). When citing, make sure that references contain not just author, title, and year, but also the venue (e.g., the conference like ICSE, MSR, ASE, or a journal like TSE, TOSEM, or JSS).
+Whenever possible, try to use the bibliography entries provided by [BibTags](https://github.com/TUBS-ISF/BibTags) and ensure that a [DOI](https://www.doi.org/) is available for the respective entry. When citing, make sure that references contain not just author, title, and year, but also the venue (e.g., the conference like ICSE, MSR, ASE, or a journal like TSE, TOSEM, or JSS). Try to use venue, publisher, and location constants (e.g., acm, tosem, ...) where possible. Place new entries in [additions.bib](literature/additions.bib) and keep them similar in formatting and content to the ones in BibTags, e.g., by copying the right entry type and then inserting your new citation data. Please refer to the in-depth description in the [BibTags repository readme](https://github.com/TUBS-ISF/BibTags).
 This includes presentations. Here an on-slide citation should read, e.g. "Sihler et al. (ICSE, 2025): On the Cuteness of Penguins".
-
-#### The Submitted Thesis
-
-**However**, to persist your final state in an easily accessible way, we encourage you to (at least at the University of Ulm) upload the compiled version of your final and submitted thesis to this repository as well.
-Please use the format `<Surname><Firstname>-<Type>.pdf` for the file name, where `<Type>` is either `BachelorThesis` or `MasterThesis` (e.g., `SihlerFlorian-MasterThesis.pdf`).
 
 #### More Information on the Submission
 
-For more information on the actual submission, please consult your supervisor ([FAQ Page of Ulm University](https://www.uni-ulm.de/studium/pruefungsverwaltung/pruefungen-und-module-faq/)).
+For more information on the actual submission, please consult your supervisor and the guidelines sent to you by the examination office.
 
 ### Configuring Metadata
 
@@ -111,6 +88,8 @@ Afterward, go to the "important metadata" section (which should start with the l
 - title (`\title`, preferably in [title case](https://capitalizemytitle.com/)),
 - name (`\author`),
 - title image (`\titleimage`),
+- study course (`field` parameter in class options),
+- student number (`\studentnumber`)
 - supervisor(s) (`\supervisor`), and
 - examiner(s) (`\examiner`)
 
@@ -160,7 +139,7 @@ Now adapting the path to the loaded document class and redefining `\thesisProfil
 
 If you move the complete template to your own directory, there is technically nothing that has to be changed!
 
-You just may want to update the [.gitlab-ci.yml](.gitlab-ci.yml) file (moving it to the root folder and changing the working directory within) so it is still in effect and builds the thesis for you. To have the link to the latest build in the readme work, you should update the path to reflect wherever the build is stored.
+You just may want to update the [.gitlab-ci.yml](__deactivated__.gitlab-ci.yml) file (moving it to the root folder and changing the working directory within) so it is still in effect and builds the thesis for you. To have the link to the latest build in the readme work, you should update the path to reflect wherever the build is stored.
 
 If you still want to receive updates there is no "automated" way, so you probably have to do it via patches.
 You can create a [patch](https://git-scm.com/docs/git-apply) from the template repository using `git diff > myPatch.patch` and apply it to your repository using `git apply myPatch.patch`.
@@ -178,41 +157,37 @@ With it, simply running `latexmk` should give you the thesis, `latexmk -c` shoul
 
 The thesis offers built-in support for LuaLaTeX (although _pdflatex_ is recommended and the priority) and it is up to you to change the respective engine within your IDE. For the [`.latexmkrc`](.latexmkrc) you should update the _pdf mode_ from `$pdf_mode = 1;` to `$pdf_mode = 4;`.
 
-### Adapting for other Universities or Institutes
-
-The template provides a `profile` option for the document class, which defaults to `uulm-sp` (at the time of writing this is the only option that works).
-This corresponds to a similarly named folder in [_config/profiles](./_config/profiles) which contains the specific settings for the specific university (logo, coloring, configuration overwrites, titlepage, ...).
-So if you want to make your own definitions, it is probably best to clone-and-own this folder, adapt the settings to your needs, and then set the profile in the document class to your profile. If you want this to remain reusable, feel free to contribute your profile to this repository.
-
 ### Included Modules
 
 Most modules are more and less modular so while they may rely on the built-in set, most of them should be adaptable outside of the thesis context. In the following list you can see which modules are included by default (✓) and what they provide.
 You can load the other modules by using, for example, `\ThesisModule{authenticity}` command in the preamble of your document (the sample structure should load some of those for you). If you have something that you want to contribute, feel free to open a pull request!
 
-|     | Module                                                      | Description                                                                       | (Internal) Source                                     |
-|:---:|:----------------------------------------------------------- |:--------------------------------------------------------------------------------- |:----------------------------------------------------- |
-|  ✓  | [\<Common>](#the-common-module)                             | Common commands for the thesis                                                    | [thesis.cls](thesis.cls)                              |
-|     | [Declaration of Authenticity](#declaration-of-authenticity) | Provide a page to sign that you created this thesis of your own work              | [authenticity.tex](_config/internal/authenticity.tex) |
-|  ✓  | [Bibliography Support](#bibliography-support)               | Provide support for a bibliography                                                | [biblatex.tex](_config/internal/biblatex.tex)         |
-|  ✓  | [Chapters and Minitocs](#chapters-and-minitocs)             | Styles the chapters, their summaries, and tocs                                    | [chapter.tex](_config/internal/chapter.tex)           |
-|  ✓  | [Colors](#colors)                                           | Provide a set of colors for the thesis                                            | [colors.tex](_config/internal/colors.tex)             |
-|  ✓  | [Useful Environments](#useful-environments)                 | Provide a set of hopefully useful environments (abstract, acknowledgements, ...)  | [environments.tex](_config/internal/environments.tex) |
-|  ✓  | [Floats](#floats)                                           | Configure the styling of floating elements (figures, ...) including their counter | [floats.tex](_config/internal/floats.tex)             |
-|  ✓  | [Fonts](#fonts)                                             | Configure the fonts used in the thesis                                            | [fonts.tex](_config/internal/fonts.tex)               |
-|  ✓  | [Footnote](#footnote)                                       | Footnotes that appear in the sidebar                                              | [footnote.tex](_config/internal/footnote.tex)         |
-|     | [Glossary](#glossary)                                       | Provide support for a glossary                                                    | [glossary.tex](_config/internal/glossary.tex)         |
-|  ✓  | [Headers and Footers](#headers-and-footers)                 | Configure the headers and footers                                                 | [headfoot.tex](_config/internal/headfoot.tex)         |
-|  ✓  | [Hyper References](#hyper-references)                       | Configure the hyper references                                                    | [hyperref.tex](_config/internal/hyperref.tex)         |
-|  ✓  | [General Layout](#general-layout)                           | Configure the general layout (including widow handling)                           | [layout.tex](_config/internal/layout.tex)             |
-|  ✓  | [Licensing](#licensing)                                     | Provide license information                                                       | [license.tex](_config/internal/license.tex)           |
-|     | [Listings](#listings)                                       | Provide support for code snippets (using the [xlistings][] backend)               | [listings.tex](_config/internal/listings.tex)         |
-|  ✓  | [Margin Paragraphs](#margin-paragraphs)                     | Configure the content of the margin                                               | [marginpar.tex](_config/internal/marginpar.tex)       |
-|  ✓  | [Page Layout](#page-layout)                                 | Configure the page layout                                                         | [page.tex](_config/internal/page.tex)                 |
-|     | [Pseudocode](#pseudocode)                                   | Provide support for pseudocode                                                    | [pseudocode.tex](_config/internal/pseudocode.tex)     |
-|  ✓  | [Tables](#tables)                                           | Configure the styling of tables                                                   | [tables.tex](_config/internal/tables.tex)             |
-|  ✓  | [Titlepage](#titlepage)                                     | Styling for the titlepage                                                         | [titlepage.tex](_config/internal/titlepage.tex)       |
-|  ✓  | [Translations](#translations)                               | Provide translation support for the template/document                             | [translation.tex](_config/internal/translation.tex)   |
-|     | [Units](#units)                                             | Provide support for (si-)units                                                    | [units.tex](_config/internal/units.tex)               |
+|    | Module                                                      | Description                                                                            | (Internal) Source                                     |
+|:--:|:------------------------------------------------------------|:---------------------------------------------------------------------------------------|:------------------------------------------------------|
+| ✓  | [\<Common>](#the-common-module)                             | Common commands for the thesis                                                         | [thesis.cls](thesis.cls)                              |
+| ✓  | [AI Statement](#ai-statement)                               | Provide a page to sign that you followed the AI guidelines and commands for disclosure | [aistatement.tex](_config/internal/aistatement.tex)   |
+| ✓  | [Declaration of Authenticity](#declaration-of-authenticity) | Provide a page to sign that you created this thesis of your own work                   | [authenticity.tex](_config/internal/authenticity.tex) |
+| ✓  | [Bibliography Support](#bibliography-support)               | Provide support for a bibliography                                                     | [biblatex.tex](_config/internal/biblatex.tex)         |
+| ✓  | [Chapters and Minitocs](#chapters-and-minitocs)             | Styles the chapters, their summaries, and tocs                                         | [chapter.tex](_config/internal/chapter.tex)           |
+| ✓  | [Colors](#colors)                                           | Provide a set of colors for the thesis                                                 | [colors.tex](_config/internal/colors.tex)             |
+| ✓  | [Useful Environments](#useful-environments)                 | Provide a set of hopefully useful environments (abstract, acknowledgements, ...)       | [environments.tex](_config/internal/environments.tex) |
+| ✓  | [Floats](#floats)                                           | Configure the styling of floating elements (figures, ...) including their counter      | [floats.tex](_config/internal/floats.tex)             |
+| ✓  | [Fonts](#fonts)                                             | Configure the fonts used in the thesis                                                 | [fonts.tex](_config/internal/fonts.tex)               |
+| ✓  | [Footnote](#footnote)                                       | Footnotes that appear in the sidebar                                                   | [footnote.tex](_config/internal/footnote.tex)         |
+| ✓  | [Glossary](#glossary)                                       | Provide support for a glossary                                                         | [glossary.tex](_config/internal/glossary.tex)         |
+| ✓  | [Headers and Footers](#headers-and-footers)                 | Configure the headers and footers                                                      | [headfoot.tex](_config/internal/headfoot.tex)         |
+| ✓  | [Hyper References](#hyper-references)                       | Configure the hyper references                                                         | [hyperref.tex](_config/internal/hyperref.tex)         |
+| ✓  | [General Layout](#general-layout)                           | Configure the general layout (including widow handling)                                | [layout.tex](_config/internal/layout.tex)             |
+| ✓  | [Licensing](#licensing)                                     | Provide license information                                                            | [license.tex](_config/internal/license.tex)           |
+| ✓  | [Listings](#listings)                                       | Provide support for code snippets (using the [xlistings][] backend)                    | [listings.tex](_config/internal/listings.tex)         |
+| ✓  | [Margin Paragraphs](#margin-paragraphs)                     | Configure the content of the margin                                                    | [marginpar.tex](_config/internal/marginpar.tex)       |
+| ✓  | [Page Layout](#page-layout)                                 | Configure the page layout                                                              | [page.tex](_config/internal/page.tex)                 |
+|    | [Pseudocode](#pseudocode)                                   | Provide support for pseudocode                                                         | [pseudocode.tex](_config/internal/pseudocode.tex)     |
+| ✓  | [Tables](#tables)                                           | Configure the styling of tables                                                        | [tables.tex](_config/internal/tables.tex)             |
+| ✓  | [Task Description](#task-description)                       | Appends a signed task description and your proposal                                    | [proposal.tex](_config/internal/proposal.tex)         |
+| ✓  | [Titlepage](#titlepage)                                     | Styling for the titlepage                                                              | [titlepage.tex](_config/internal/titlepage.tex)       |
+| ✓  | [Translations](#translations)                               | Provide translation support for the template/document                                  | [translation.tex](_config/internal/translation.tex) |
+|    | [Units](#units)                                             | Provide support for (si-)units                                                         | [units.tex](_config/internal/units.tex)               |
 
 #### The Common Module
 
@@ -225,7 +200,7 @@ As we are based on the [Koma-Script][koma] class [scrbook][koma], you can use al
 Of course, not all options are equally important. Those of importance are at the top of the list:
 
 | Option            | Default       | Description                                                                                                                                    |
-|:----------------- |:------------- |:---------------------------------------------------------------------------------------------------------------------------------------------- |
+|:----------------- |:--------------|:-----------------------------------------------------------------------------------------------------------------------------------------------|
 | `citeInMarginpar` | true          | If set to false, citations will not appear in the marginpar (see [bibliography support](#bibliography-support)).                               |
 | `citeMarginparScope` | chapter    | How often a citation may repeat in the margin: once per `chapter`, `section`, `subsection`, `page`, `document`, or `always` (see [bibliography support](#bibliography-support)). |
 | `draft`           | false         | If set to true, the document will be compiled in draft mode (showing overfull boxes, ...).                                                     |
@@ -234,7 +209,7 @@ Of course, not all options are equally important. Those of importance are at the
 | `floatRefSidenotes` | auto        | Whether references to floats produce `on page` sidenotes. With `auto` they only appear if `pageInFloatRef` is `false`, as the `13A` numbering already encodes the page. |
 | `license`         | CCBY          | The license to use for the document (see [licensing](#licensing)).                                                                             |
 | `pageInFloatRef`  | true          | This automatically activates the effects of the [floats module](#floats). If you set this to `false` you get the default LaTeX numbering.      |
-| `profile`         | uulm-sp       | The profile to use for the document (see the [profiles](#adapting-for-other-universities-or-institutes)).                                      |
+| `profile`         | tubs-isf      | The profile to use for the document.                                                                                                           |
 | `type`            | master-thesis | The type of the thesis (either `bachelor-thesis` or `master-thesis`).                                                                          |
 | `verbose`         | false         | If set to true, the document will be compiled in verbose mode (showing more information in the log and more detailed error messages).          |
 | ---------------   | ---------     | ------------------------------------------------------------------------------------------------------------------------                       |
@@ -318,6 +293,10 @@ Besides this, the common module provides some useful commands:
 
 - `\ThesisModule{<name>}`: Load a module (if available) for the thesis.
 - `\InputFrom{<path>}`: Add a path to the input path (so you do not have to specify it in the `\input` command). For example, `\InputFrom{segments}` allows you to use `\input{introduction}` instead of `\input{segments/introduction}`. This may also help when using the template as a [submodule](#using-a-submodule) or [from a different directory](#working-from-a-different-directory).
+
+#### AI Statement
+
+This module creates an AI statement based on the ISF AI guidelines at the end of the thesis. To add disclosures, you either add `\aitypeone{Tool}{Used in}{History/Prompt}{Sentiment}` or `\aitypetwo{Tool}{Used in}{History/Prompt}{Sentiment}` commands to [ai-entries.tex](segments/ai-entries.tex) or use `\aiquote{Tool}{History/Prompt}{Sentiment}{AI Quote}` to add a type 2 quote at this position.
 
 #### Declaration of Authenticity
 
@@ -623,6 +602,9 @@ Doing that you can typeset an algorithm like the following, in the document, you
 #### Tables
 
 We do not do a lot of magic with tables, besides what we configure in the [float](#floats) module. In short, we load the [array][], [booktabs][], [tabularx][], and [longtable][] packages providing you with great commands such as `\toprule`, `\midrule`, and `\bottomrule` to create beautiful tables. Please have a look at the respective package documentation (especially that for [booktabs][]) or have a look at the sample [introduction.tex](segments/introduction.tex) file.
+
+#### Task Description
+If this is necessitated by your study office, this module appends your proposal and a signed task description using the `\makeproposalinclusion{path-to-proposal}` command.
 
 #### Titlepage
 

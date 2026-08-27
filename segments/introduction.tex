@@ -1,157 +1,20 @@
 \setchaptertoc
 \chapter{Introduction}\label{chp:introduction}
-\csummary{What is the problem solved by this thesis?\csumnext What are our research questions?\csumnext What are our contributions?}
 
 \section{Motivation}
+The introduction motivates the research topic and gives an overview over the related scientific work using citations~\cite{TBK:ICSE09, SBK+:SPLC24}.
+The introduction starts with the significance of the  general research area and then leads reader attention step-wise to the area of the specific research problem of the thesis.
+That means that the introduction is structured like an inverted triangle, starting with the general research area and then focusing more and more on the specific context of the thesis.
 
-Sample cite~\cite{DBLP:conf/msr/SihlerPSTDD24}
-
-\begin{minted}{R}
-x <- list(i='hey', j='there')
-for(i in x) {
-   print(paste("x$i", x$i))
-}
-print(x)
-\end{minted}
+$\Rightarrow$ Why is your research important?
 
 
-To interpret the program above, we take \bR{x <- 2} to the set of \gls{not:N}, \gls{not:Z}, and \gls{not:R} because they describe funny numbers that we can use to index what we call an \gls{ast} (if you want the long form use \texttt{\textbackslash glsac}: \glsac{ast}). Now we can use a \gls{cpo} or verify the \gls{def:behavioral-equivalence} with \glspl{formal:external-factor} when interpreting the code as a \Gls{formal:model} (see \gls{def:behavioral-equivalence}, sometimes called \gls{def:behavioral-equivalence}[foo bar]).
-\gls{not:N} will not be repeated on this page!
+\section{Contributions} \label{sec:introduction:contributions}
+The contributions section lists all scientific contributions of your work (not the findings).
+This naturally includes answering your research problem/questions, but can also include reusable data sets, newly created tools, \dots
 
-Using the \texttt{\textbackslash glssym} macro defined in the preamble you can even color symbol uses such as \glssym{not:N} automatically if this is to your liking:
-\begin{align}
-   \glssym{not:N} &= \{1, 2, \ldots\} \\
-   \glssym{not:Z} &= \glssym{not:N} \cup \{0\} \cup \{-1, -2, \ldots\} \\
-   \glssym{not:R} &= \textit{Set of real numbers} \\
-   \glssym{not:C} &= \textit{Set of complex numbers} \\
-   \glssym{not:N} &\subset \glssym{not:Z} \subset \glssym{not:R} % \subset \glssym{not:C}
-\end{align}
+$\Rightarrow$ What does your thesis contribute to science?
 
-However, as you may see, \glssym{not:C} is not shown in the sidebar even though it appears first within the math mode. The reason(s) for this are manifold but in short we avoided this as math mode may be rendered multiple times. 
-You can use \texttt{\textbackslash showsymbols} to propose a list of symbols to show before the math environment (using \texttt{\textbackslash showsymbols*} these will be forced as showcased below):
-\begin{align}
-   \showsymbols*{not:N,not:Z,not:R,not:C}
-   \glssym{not:N} &= \{1, 2, \ldots\} \\
-   \glssym{not:Z} &= \glssym{not:N} \cup \{0\} \cup \{-1, -2, \ldots\} \\
-   \glssym{not:R} &= \textit{Set of real numbers} \\
-   \glssym{not:C} &= \textit{Set of complex numbers} \\
-   \glssym{not:N} &\subset \glssym{not:Z} \subset \glssym{not:R} % \subset \glssym{not:C}
-\end{align}
+\section{Overview} \label{sec:introduction:overview}
 
-\clearpage
-\begin{figure}
-   \begin{subfigure}[c]{0.33\linewidth}
-      \includegraphics[width=\linewidth]{img/example.pdf}
-      \caption{First subfigure.}
-      \label{fig:first}
-  \end{subfigure}\hfill
-  \begin{subfigure}[c]{0.33\linewidth}
-      \includegraphics[width=\linewidth]{img/example.pdf}
-      \caption{Second subfigure.}
-   \end{subfigure}
-   \caption[Main]{Main caption.}
-   \label{fig:main}
-\end{figure}
-
-A viable way to group different figures is the \textit{subfigures} command, a short example can be seen at \cref{fig:main}.
-A single subfigure can be referenced on its own, like \cref{fig:first}.
-This is \cref{fig:main} with the name \nameref{fig:main}.\footurl{www.google.com}{2024-12-24}
-See ulm university\foothref{https://web.archive.org/web/20241221140233/https://www.uni-ulm.de/}{https://www.uni-ulm.de/}{2024-12-21} for more information.
-
-\begin{table}
-   \caption{A simple table}
-   \begin{tabular}{cc}
-      \toprule
-      A & B \\
-      \midrule
-      1 & 2 \\
-      3 & 4 \\
-      \bottomrule
-   \end{tabular}
-   \label{tab:simple}
-\end{table}
-
-Notes, references, and small figures can be placed in the margin with \texttt{\textbackslash sidenote}.\sidenote{Like this one, which is typeset next to its anchor.}
-A figure that is too small to deserve a float of its own is a good candidate for the margin:\sidenote{%
-   \centering
-   \includegraphics[width=.8\linewidth]{img/example.pdf}%
-   \captionof{figure}{A figure within the margin.}%
-   \label{fig:sidenote}%
-}
-Such a figure is numbered and referenced like any other one, see \cref{fig:sidenote}.
-The optional argument shifts a note vertically, which is helpful to align it with its surroundings.\sidenote[1.5\baselineskip]{This note is shifted downwards by one and a half lines.}
-
-\section{Problem Statement}
-
-\begin{pseudo}[tbp]
-	\caption{Algo Good}
-	\label{fun:good-algo}
-	\begin{algorithm}[H]
-		\PreCode
-		\Input{x :: String}
-      \Output{y :: String}
-		\Output{z :: String}
-		
-		\StartCode
-		\lIf{x \KwIs "hello"}{
-         \label{alg:important-line}\Return{"world"}
-      }
-      \While{true}{
-         \If{y \KwIs "world"}{
-            \Return{"hello"}
-         }
-      }
-      \Return{"goodbye"}
-	\end{algorithm}
-\end{pseudo}
-
-In the \nameref{fun:good-algo} algorithm \cref{fun:good-algo}, an important line is \AlgoLineRef{alg:important-line}.
-
-\begin{rqs}
-   \item \label{rq:concept} What is the concept of this thesis?
-   \item \label{rq:implementation} How is the concept implemented?
-   \item \label{rq:evaluation} How is the implementation evaluated?
-   \begin{rqs}
-      \item \label{rq:evaluation:correctness} How is the correctness evaluated? \begin{rqs}
-         \item Please do not nest the questions that deep!
-      \end{rqs}
-      \item \label{rq:evaluation:performance} How is the performance evaluated?
-   \end{rqs}
-\end{rqs}
-
-We can now reference \ref{rq:concept} or with cleveref: \cref{rq:concept}.
-
-You can also reference default enumerate elements:
-
-\begin{enumerate}
-   \item \label{item:rando}First item
-   \item Second item
-\end{enumerate}
-
-With ref: \enquote{\ref{item:rando}}, on page \pageref{item:rando}, and cref: \enquote{\cref{item:rando}}. 
-
-\needspace{5\baselineskip}
-But please, if there is any sense in doing so make use of, e.g., \texttt{ref} by \texttt{enumitem}:
-
-\begin{enumerate}[ref={Penguin Element \arabic*}]
-   \item \label{item:rando2}First item
-   \item Second item
-\end{enumerate}
-
-With ref: \enquote{\ref{item:rando2}}, on page \pageref{item:rando2}, and cref: \enquote{\cref{item:rando2}}.
-Using \texttt{\textbackslash newlist} you can also define your own lists, e.g., for research questions or contributions and give them your own ref names~--- see, e.g., \texttt{rqs} for an example.
-
-
-\begin{minted}[float,caption={A floating caption},label=jeah]{R}
-x <- list(i='hey', j='there')
-for(i in x) {
-   print(paste("x$i", x$i))
-}
-print(x)
-\end{minted}
-
-We can reference code as well, see: \cref{jeah}.
-
-\section{Contributions}
-
-\section{Overview}
+A short overview over the general structure of your thesis.

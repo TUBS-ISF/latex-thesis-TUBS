@@ -1,6 +1,5 @@
 # used by the l3build system
 build/
-thesis.pdf
 *-SAVE-ERROR
 **/*[sS]ignature.[pP][nN][gG]
 **/*[sS]ignature.[jJ][pP][gG]

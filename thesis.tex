@@ -1,38 +1,50 @@
+% !TeX program = latexmk
 \documentclass[
+    profile=tubs-isf,
 	verbose,
 	english,
-	type=bachelor-thesis, % master-thesis
-	%field=Computer Science, % change your field
+	type=bachelor-thesis, % master-thesis %TODO
+	field={{Computer Science}}, % change to your course of study/program %TODO
 	license=CCBY, % CCBY, CCBYSA, CCBYNC, CCBYNCSA; open an issue if you need another license
 	%sftitle,  % sans-serif titles
 	paper=a4,  % forces A4 format
 	%twoside,   % twosided layout
 	%draft,    % omit title page, listings, and particular chapters selected below using include only
 	%print,    % the printed version does not use colored links
-	%citeMarginparScope=section, % repeat margin cites per section instead of per chapter (also: subsection, page, document, always)
-	%pageInFloatRef=false % if you want to have the default names for floats instead of <page><Letter>
+	citeMarginparScope=section, % repeat margin cites per section instead of per chapter (also: subsection, page, document, always)
+	pageInFloatRef=false % if you want to have the default names for floats instead of <page><Letter>
 	%floatRefSidenotes=true % force 'on page' sidenotes for float refs (auto: only without pageInFloatRef)
 	%notomath=false % do not use noto math as a font but fallback to the mathpazo alternative
 ]{thesis}
 
+\addbibresource{literature/MYabrv.bib}
+\addbibresource{literature/IEEEabrv.bib}
 \addbibresource{literature/literature.bib}
+\addbibresource{literature/additions.bib}
+
+\input{metadata} %TODO: fill out metadata there
+
+
+\ThesisModule{aistatement}
+
+
 
 % for the final page! (see below with `\makedeclarationofauthenticity)
 \ThesisModule{authenticity}
-% specify \signature{path/to/signature.png} to include a signature
-% you can also shift the signature with \signature[xshift=0pt,yshift=0pt]{path/to/signature.png}
-% if you want to set the location of the signature, use
-\signaturelocation{Ulm}
-% if you want to set the submission date of the declaration, use
-\signaturedate{2025-12-30}
 \makedeclarationofauthenticity % for a predefined declaration of authenticity
 % \begin{declarationofauthenticity} % when you want to write your own text
 % 	No, I definitely did not copy all my code from StackOverflow. I swear!
 % \end{declarationofauthenticity}
-	
+
+% proposal inclusion as required by the study office
+\ThesisModule{proposal}
+
+
 % provide addon listings support:
 \ThesisModule{listings}
 \LoadLanguage{R}
+
+\ThesisModule{featuremodels}
 
 \ThesisModule{units}
 
@@ -43,18 +55,9 @@
 % do you want colored glossary symbols in the document?
 \def\glssym#1{{\color{purple!80!blue}\gls{#1}}}
 
-% == Important Metadata
-\title{My Great Thesis with a Reaaaaally Reaaaaally Reaaaaally Long Title}
-\author{Your Amazing Name}
-% \studentnumber{} your matriculation number if you have to
 
-\titleimage[width=.75\linewidth]{img/title-banner-image}
-\date{\today}
 
-\examiner{Prof. Dr. Matthias Tichy}{Institute of Software Engineering and Programming Languages}
-% \examiner{Your Second Examiner}{Their Institute}
-\supervisor{Florian Sihler}{Institute of Software Engineering and Programming Languages}
-% == End of Important Metadata
+\input{segments/ai-entries}
 
 \begin{document}
 \hideindraft{
@@ -75,13 +78,15 @@
 			\lstlistoflistings
 		}
 	}
+	\makeproposalinclusion{proposal/proposal} % for proposal inclusion
 	
 	\mainmatter
 	\include{segments/introduction}
-	\include{segments/related-work}
+	\include{segments/background}
 	\include{segments/concept}
 	\include{segments/implementation}
 	\include{segments/evaluation}
+	\include{segments/related-work}
 	\include{segments/conclusion}
 
 	\backmatter
@@ -89,6 +94,8 @@
 
 	\let\clearpage\newpage
 	\let\cleardoublepage\newpage
-	\chapter{Glossary and Acronyms}
+	\chapter{Glossary and Acronyms} %TODO change for German
 	\printglossaries
+	\chapter{AI Usage} %TODO change for German
+	\printaistatement
 \end{document}
