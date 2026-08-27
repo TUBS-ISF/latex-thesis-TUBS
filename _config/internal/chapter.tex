@@ -10,7 +10,7 @@
    \IfChapterUsesPrefixLine{%
       \setbox\thesis@chapternum=\hbox{\thesis@chapternumber@format{\thechapter}}%
       \edef\shift{\the\dimexpr-.5\dp\thesis@chapternum-.5\ht\thesis@chapternum+.5\baselineskip+1.15pt}%
-      \sidenote[\shift]{\protect\thesis@chapternumber@format{\thechapter}}%
+      \expandsidenote[\shift]{\protect\thesis@chapternumber@format{\thechapter}}%
    }{}%
 }
 \let\thesis@chapterformat\chapterformat
@@ -41,7 +41,7 @@
 \def\thesis@chaptertoc@install{%
 \setchapterpreamble{%
    \ifthesis@marginpar
-      \sidenote{\protect\thesis@marginpar@chaptertoc@do{\thesis@ext@current@chaptoc}}%
+      \expandsidenote{\protect\thesis@marginpar@chaptertoc@do{\thesis@ext@current@chaptoc}}%
    \else
       \begin{minipage}{\linewidth}
       \value{tocdepth}=\sectiontocdepth% we want entries down to subsection

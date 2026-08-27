@@ -1,3 +1,7 @@
+% has to be available even without the glossary module, as the listings, the
+% bibliography, and the margin itself rely on it
+\newif\ifdisableside
+
 \ifthesis@marginpar
 \thesis@info{Enable marginpar support}
 \RequirePackage{mparhack}
@@ -20,6 +24,10 @@
 
 \RequirePackage{ifoddpage}
 \newcommand*\sidenote{\@ifstar\@sidenote\@@sidenote}
+% \expandsidenote expands its content while the note is written, which captures
+% transient values (\glslabel, \thechapter, ...) but breaks fragile commands -- it is
+% meant for the internals of this class, documents should stick to \sidenote
+\newcommand*\expandsidenote{\@ifnextchar[{\s@xsidenote}{\s@xsidenote[\z@]}}
 \newif\ifinsidenote
 \ifthesis@oneside
 \def\thesis@ragged@do#1#2{#1}
@@ -40,12 +48,17 @@
 \ifthesis@draft
 \long\def\s@sidenote[#1]#2{\marginnote{\normalfont\scriptsize\itshape\thesis@sn@gd{#1}{#2}}}
 \long\def\s@@sidenote[#1]#2{\marginnote{\normalfont\scriptsize\itshape\thesis@sn@gd{#1}{#2}}}
+\let\s@xsidenote\s@@sidenote
 \else
 \long\def\s@sidenote[#1]#2{\ifx#1\z@ \makenote*{\thesis@sn@gd@{#2}}\else\makenote*{\thesis@sn@gd{#1}{#2}}\fi}
-\long\def\s@@sidenote[#1]#2{\ifx#1\z@ \makenote{\protect\thesis@sn@gd@{#2}}\else\makenote{\protect\thesis@sn@gd{#1}{#2}}\fi}
+\let\s@@sidenote\s@sidenote
+% the expanding variant: \makenote expands its argument when writing the note, which
+% silently swallows \label and lets fragile commands like \captionsetup loop forever
+\long\def\s@xsidenote[#1]#2{\ifx#1\z@ \makenote{\protect\thesis@sn@gd@{#2}}\else\makenote{\protect\thesis@sn@gd{#1}{#2}}\fi}
 \fi
 \else
 \thesis@info{Disable marginpar support, still supplying sidenote foots}
 \long\def\s@sidenote[#1]#2{\footnote{#2}}
 \long\def\s@@sidenote[#1]#2{\footnote{#2}}
+\let\s@xsidenote\s@@sidenote
 \fi

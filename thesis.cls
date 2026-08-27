@@ -29,6 +29,7 @@
 \DeclareBoolOption[true]{marginpar}
 \DeclareComplementaryOption{nomarginpar}{marginpar}
 \DeclareBoolOption[true]{citeInMarginpar}
+\DeclareStringOption[chapter]{citeMarginparScope}
 \DeclareBoolOption[false]{sftitle}
 \DeclareComplementaryOption{rmtitle}{sftitle}
 \DeclareBoolOption[true]{pageInFloatRef}
@@ -45,6 +46,24 @@
 \DeclareBoolOption[true]{fira}
 
 \ProcessKeyvalOptions*
+
+% the scope within which a citation appears in the margin at most once
+\begingroup
+\def\@tempa#1{\expandafter\gdef\csname thesis@citescope@#1\endcsname}
+\@tempa{chapter}{\thechapter}
+\@tempa{section}{\thesection}
+\@tempa{subsection}{\thesubsection}
+\@tempa{page}{\thepage}
+\@tempa{document}{document}
+\@tempa{always}{}
+\endgroup
+\newif\ifthesis@citescope@always
+\ifcsname thesis@citescope@\thesis@citeMarginparScope\endcsname
+    \def\thesis@@val{always}%
+    \ifx\thesis@citeMarginparScope\thesis@@val\thesis@citescope@alwaystrue\fi
+\else
+    \thesis@error{Invalid value '\thesis@citeMarginparScope' for option citeMarginparScope}{Please use 'chapter', 'section', 'subsection', 'page', 'document', or 'always'.}%
+\fi
 
 \newif\ifthesis@floatRefSidenotes
 \def\thesis@@val{auto}

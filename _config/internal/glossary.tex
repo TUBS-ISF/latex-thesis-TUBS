@@ -12,8 +12,6 @@
 % \noist % disable index style file
 \RequirePackage{glossary-longragged}
 
-\newif\ifdisableside
-
 \newif\if@lglos@atinit@glossary@
 % single- and plural-page
 % this is a hack. i check if 'delimN' or 'delimR' are in the page def
@@ -159,16 +157,16 @@
 \def\thesissidenotegls{\ifinsidenote\else
    \global\glsshouldbeittrue
    % disableside to restrict (may-be infinite) propagation
-   \thesisgls@lockForPage{\thesissidenotebase\sidenote{\protect\thesis@sidesymbol{\glslabel}}}{\glslabel}{\global\glsshouldbeitfalse\thesissidenotebase}%
+   \thesisgls@lockForPage{\thesissidenotebase\expandsidenote{\protect\thesis@sidesymbol{\glslabel}}}{\glslabel}{\global\glsshouldbeitfalse\thesissidenotebase}%
    \fi
 }
 \robustify\thesissidenotegls
 \def\thesissidenoteGls{%
-   \global\glsshouldbeittrue\thesisgls@lockForPage{\thesissidenotebase\sidenote{\protect\disablesidefalse\protect\glslink{\glslabel}{\textbf{\capitalisewords{\glsentrytext{\glslabel}}}:\protect\disablesidetrue\protect\space\thesis@shortgls}}}{\glslabel}{\global\glsshouldbeitfalse\thesissidenotebase}%
+   \global\glsshouldbeittrue\thesisgls@lockForPage{\thesissidenotebase\expandsidenote{\protect\disablesidefalse\protect\glslink{\glslabel}{\textbf{\capitalisewords{\glsentrytext{\glslabel}}}:\protect\disablesidetrue\protect\space\thesis@shortgls}}}{\glslabel}{\global\glsshouldbeitfalse\thesissidenotebase}%
 }
 \robustify\thesissidenoteGls
 \def\thesissidenoteSymbol{%
-   \ifmmode\thesissidenotesymbol\else\global\glsshouldbeittrue\thesisgls@lockForPage{\thesissidenotesymbol\sidenote{\protect\disablesidefalse\protect\glslink{\glslabel}{\textbf{{\glssymbol{\glslabel}}}}:\protect\disablesidetrue\protect\space\thesis@shortgls}}{\glslabel}{\global\glsshouldbeitfalse\thesissidenotesymbol}\fi%
+   \ifmmode\thesissidenotesymbol\else\global\glsshouldbeittrue\thesisgls@lockForPage{\thesissidenotesymbol\expandsidenote{\protect\disablesidefalse\protect\glslink{\glslabel}{\textbf{{\glssymbol{\glslabel}}}}:\protect\disablesidetrue\protect\space\thesis@shortgls}}{\glslabel}{\global\glsshouldbeitfalse\thesissidenotesymbol}\fi%
 }
 \robustify\thesissidenoteSymbol
 
@@ -186,7 +184,7 @@
 
 \def\sidesymbol#1{%
    \begingroup\def\glslabel{#1}\ifdisableside\else
-   \global\glsshouldbeittrue\thesisgls@lockForPage{\sidenote{\protect\disablesidefalse\protect\glslink{\glslabel}{\textbf{{\glssymbol{\glslabel}}}}:\protect\disablesidetrue\protect\space\thesis@shortgls}}{\glslabel}{}%
+   \global\glsshouldbeittrue\thesisgls@lockForPage{\expandsidenote{\protect\disablesidefalse\protect\glslink{\glslabel}{\textbf{{\glssymbol{\glslabel}}}}:\protect\disablesidetrue\protect\space\thesis@shortgls}}{\glslabel}{}%
    \fi\endgroup
 }
 \RequirePackage{pgffor}

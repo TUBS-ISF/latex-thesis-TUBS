@@ -8,7 +8,6 @@
 \PassOptionsToPackage{
    unicode=true,
    draft=false,
-   pdftex,
    backref,
    pagebackref=false,
    bookmarks=true,
@@ -36,7 +35,9 @@
 \let\nohyper\thesis@disablehyper
 \ifthesis@draft\else
 \AtBeginDocument{%
-   {\protected@edef\@subject{\translate{\thesis@type}}\def\nl{\space}%
+   % \translate is robust and would survive into the PDF string unexpanded,
+   % \translatelet hands us the plain replacement text instead
+   {\translatelet\@subject{\thesis@type}\def\nl{\space}%
    \hypersetup{%
       pdftitle={\@title},
       pdfauthor={\@author},

@@ -43,8 +43,12 @@
 \fi
 
 \ifthesis@enhanceMath
+    % under LuaLaTeX unicode-math (loaded below) supplies the script alphabets
+    % itself and would overwrite this declaration anyway
+    \ifluatex\else
     \thesis@debug{Enhancing mat typesetting}
     \DeclareMathAlphabet{\mathcal}{OMS}{cmsy}{m}{n}
+    \fi
 \fi
 
 \ifthesis@fira
@@ -54,13 +58,26 @@
 
 % % use lining figures in tables
 \ifluatex
+% mathtools wants to see the legacy math setup, so it has to come first (the
+% class requires it again later on, which is a no-op by then)
+\RequirePackage{mathtools}
 \RequirePackage{unicode-math}\def\LiningFigures{\addfontfeatures{Numbers=Lining}\sisetup{text-font-command=\addfontfeatures{Numbers=Lining}}}
+% notomath is a pdfLaTeX-only package: loading it on top of unicode-math clashes
+% over the delimiters ('Command \arrowvert already defined'), so we ask
+% unicode-math for the matching OpenType face instead
 \ifthesis@notomath
-\thesis@debug{Setup Noto Math font}
-\AtEndPreamble{%
-    \PassOptionsToPackage{varbb}{notomath}
-    \RequirePackage{notomath}
-}
+    \IfFontExistsTF{Noto Sans Math}{%
+        \thesis@debug{Setup Noto Math font}%
+        \setmathfont{Noto Sans Math}%
+    }{%
+        \thesis@warn{The font 'Noto Sans Math' is not installed, falling back
+          to 'TeX Gyre Pagella Math'. Install the Noto fonts or pass
+          'notomath=false' to silence this warning}%
+        \setmathfont{texgyrepagella-math.otf}%
+    }
+\else
+    \thesis@debug{Setup TeX Gyre Pagella Math font}
+    \setmathfont{texgyrepagella-math.otf}
 \fi
 \else
 \def\LiningFigures{\figureversion{lf}\selectfont\sisetup{text-font-command=\figureversion{lf}\selectfont}}
@@ -94,4 +111,10 @@
 \def\sbseries{\fontseries{sb}\selectfont}
 \def\textsb#1{\begingroup\sbseries#1\endgroup}
 
+% 'ppl' is the Type1 Palatino with lining figures; under LuaLaTeX the main font
+% comes from fontspec and only knows the corresponding OpenType feature
+\ifluatex
+\def\thesis@liningnumbers{\addfontfeatures{Numbers=Lining}}
+\else
 \def\thesis@liningnumbers{\fontfamily{ppl}\selectfont}
+\fi

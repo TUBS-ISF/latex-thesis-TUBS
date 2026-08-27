@@ -29,7 +29,7 @@
 \def\InitPageCounter#1{\newcounter{c@@#1@@lb}\csdef{c@#1@lb}{0}}
 
 % we no longer do that but instead use a macro for each page
-\InitPageCounter{figure}\InitPageCounter{subfigure}\InitPageCounter{table}\InitPageCounter{lstlisting}
+\InitPageCounter{figure}\InitPageCounter{table}\InitPageCounter{lstlisting}
 % #1 type like figure | table | ..., #2 counter
 \def\CountThisPageWrite#1#2{%
 \expandafter\providecommand\csname c@#1@#2\endcsname{0}% a default value
@@ -56,17 +56,62 @@
 \robustify\CountThisPage
 \def\thesissetfig{\CountThisPage{figure}{c@figure@lb}}
 \def\thesissettbl{\CountThisPage{table}{c@table@lb}}
-\def\thesissetsubfig{\CountThisPage{subfigure}{c@subfigure@lb}}
 \def\thesissetlst{\CountThisPage{lstlisting}{c@lstlisting@lb}}
 
 \ifthesis@pageInFloatRef
 \def\thesis@figure{figure}\def\thesis@table{table}\def\thesis@lstlisting{lstlisting}
 \def\thesis@subfigure{subfigure}
+\newif\ifthesis@floatcounted
+% a float claims its number as soon as it starts (so that subcaptions can refer to it),
+% but a float without any caption must not consume one -- we therefore remember what the
+% float claimed and roll the claim back if no caption ever used it (this also covers
+% captions which are deferred out of the float, e.g. into the margin with \sidenote)
+\def\thesis@rb@name{}\def\thesis@rb@val{}
+\def\thesis@floatclaim#1#2{%
+  #1% assigns the number and updates \curpgnum
+  \xdef\thesis@rb@name{c@\curpgnum @#2@lb}%
+  \expandafter\xdef\expandafter\thesis@rb@val\expandafter{\csname\thesis@rb@name\endcsname}%
+  \global\thesis@floatcountedtrue
+}
+\def\thesis@floatrollback{%
+  \ifthesis@floatcounted% the claim was never used by a caption
+    \expandafter\ifx\csname\thesis@rb@name\endcsname\thesis@rb@val% and nothing claimed after it
+      \expandafter\xdef\csname\thesis@rb@name\endcsname{\the\numexpr\thesis@rb@val-1\relax}%
+    \fi
+  \fi
+  \global\thesis@floatcountedfalse
+}
+\apptocmd\@xfloat{%
+  \ifx\@captype\thesis@figure\thesis@floatclaim\thesissetfig{figure}\fi
+  \ifx\@captype\thesis@table\thesis@floatclaim\thesissettbl{table}\fi
+}{}{}
+\apptocmd\end@float{\thesis@floatrollback}{}{}
+\apptocmd\end@dblfloat{\thesis@floatrollback}{}{}
+\def\thesisfloatcount#1{\ifthesis@floatcounted\global\thesis@floatcountedfalse\else#1\fi}
+\def\thesisfloathooks{%
+    \ifx\@captype\thesis@figure\thesisfloatcount\thesissetfig\fi
+    \ifx\@captype\thesis@table\thesisfloatcount\thesissettbl\fi
+}
 \def\thesisfigurehooks{%
-    \ifx\@captype\thesis@figure\thesissetfig\fi
-    \ifx\@captype\thesis@table\thesissettbl\fi
-    \ifx\@captype\thesis@subfigure\thesissetsubfig\fi
     \ifx\@captype\thesis@lstlisting\thesissetlst\fi
+}
+% longtable is no float: it steps its counter in \LT@array and never reaches
+% \caption@refstepcounter, so we claim the number there (and roll it back again if
+% the table carries no caption at all)
+\AddToHook{package/longtable/after}{%
+  \pretocmd\LT@array{%
+    \edef\thesis@lt@type{\LTcaptype}%
+    \ifx\thesis@lt@type\thesis@table\thesis@floatclaim\thesissettbl{table}\fi
+  }{}{}%
+  % the assignment has to happen within the \noalign group of the caption, as we are
+  % in the middle of an alignment here
+  \patchcmd\LT@caption{\noalign\bgroup}{\noalign\bgroup\global\thesis@floatcountedfalse}{}{}%
+  \apptocmd\endlongtable{\thesis@floatrollback}{}{}%
+}
+\AddToHook{begindocument/end}{%
+  \pretocmd\caption@refstepcounter{\thesisfloathooks}{}{}%
+  \def\p@subfigure{\thefigure/}%
+  \def\p@subtable{\thetable/}%
 }
 \AddToHook{cmd/caption/before}{%
   \thesisfigurehooks
@@ -79,10 +124,10 @@
 
 % \global\c@exa@lb0 \global\c@nts@lb0
 % \AddToHook{shipout/after}{\global\c@figure@lb0 \global\c@table@lb0}
-\long\def\thesis@sn@gd@#1{\parbox\linewidth{\insidenotetrue\let\label\creflbl\thesis@ragged#1\vskip2.25pt}}
+\long\def\thesis@sn@gd@#1{\parbox\linewidth{\insidenotetrue\let\label\creflbl\thesis@ragged\thesissidebarhook#1\vskip2.25pt}}
 % patch faulty cref restoration in notecolumn
 
-\def\creflbl#1{\cref@old@label{#1}\@bsphack\edef\@tempa{{page}{\the\c@page}}\setcounter{page}{1}\edef\@tempb{\thepage}\expandafter\setcounter\@tempa\cref@constructprefix{page}{\cref@result}\protected@write\@auxout{}{\string\newlabel{#1@cref}{{\cref@currentlabel}{[\@tempb][\arabic{page}][\cref@result]\thepage}}}\@esphack}
+\def\creflbl#1{\cref@old@label{#1}\@bsphack\edef\@tempa{{page}{\the\c@page}}\setcounter{page}{1}\edef\@tempb{\thepage}\expandafter\setcounter\@tempa\cref@constructprefix{page}{\cref@result}\protected@write\@auxout{}{\string\newlabel{#1@cref}{{\cref@currentlabel}{[\@tempb][\arabic{page}][\cref@result]\thepage}{}{}{}}}\@esphack}
 
 \RequirePackage{alphalph}
 % i do not like italic small caps, furthermore, most fonts do not support them

@@ -34,15 +34,17 @@
 \apptocmd\printbibliography{\endgroup}\relax\relax
 
 % kill the original macros as we moved them to the margin
-\newbibmacro*{url+urldate}{\usebibmacro{url}}
+\renewbibmacro*{url+urldate}{\usebibmacro{url}}
 \renewbibmacro*{pageref}{}
 \fi
 
-% lockcites in the sidebar inspired by my bachelor's thesis, we cite by section
+% lockcites in the sidebar inspired by my bachelor's thesis; a citation appears
+% at most once per scope, the scope is chosen by the citeMarginparScope option
+\def\thesis@sidecite@scope{\csname thesis@citescope@\thesis@citeMarginparScope\endcsname}
 \def\thesis@sidecite@do#1{\tiny\color{darkgray}\plaincite{#1}~\thesis@sidecite{#1}}
 \def\@locksidecite{%
-   \expandafter\expandafter\expandafter\xdef\expandafter\csname mcited\etry\endcsname{\thesection}%
-   \sidenote[\z@]{\protect\thesis@sidecite@do{\etry}}%
+   \expandafter\expandafter\expandafter\xdef\expandafter\csname mcited\etry\endcsname{\thesis@sidecite@scope}%
+   \expandsidenote[\z@]{\protect\thesis@sidecite@do{\etry}}%
 }
 \newif\if@sidecite@doreset@
 \def\forcecite#1{{\@sidecite@doreset@true\sidecite{#1}\plaincite{#1}}}
@@ -53,7 +55,10 @@
       \if@sidecite@doreset@
          \csundef{mcited\etry}%
       \fi
-      \expandafter\ifcsname mcited\etry\endcsname\xdef\@tmp{\thesection}%
+      \ifthesis@citescope@always
+         \@locksidecite
+      \else
+      \expandafter\ifcsname mcited\etry\endcsname\xdef\@tmp{\thesis@sidecite@scope}%
          \expandafter\expandafter\expandafter\ifx\expandafter\csname mcited\etry\endcsname
             \@tmp
          \else
@@ -62,16 +67,23 @@
       \else
          \@locksidecite
       \fi
+      \fi
    }\fi%
 }
 
-\newcommand*\plaincite[2][]{}
+\NewDocumentCommand\plaincite{oom}{}
 
 % \ifthesis@print\else
 \AfterEndPreamble{%
 \ifthesis@citeInMarginpar
 \DeclareCommandCopy\plaincite\cite
-\renewcommand*\cite[2][]{\ifdisableside\else\sidecite{#2}\fi\plaincite[#1]{#2}}
+% \cite carries two optional arguments (prenote and postnote) in biblatex, so we
+% have to hand both of them through to the original macro
+\RenewDocumentCommand\cite{oom}{%
+   \ifdisableside\else\sidecite{#3}\fi
+   \IfNoValueTF{#1}{\plaincite{#3}}%
+      {\IfNoValueTF{#2}{\plaincite[#1]{#3}}{\plaincite[#1][#2]{#3}}}%
+}
 \fi% \fi
 }
 

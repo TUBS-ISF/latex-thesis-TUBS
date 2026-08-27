@@ -186,7 +186,7 @@ You can load the other modules by using, for example, `\ThesisModule{authenticit
 | ✓  | [Tables](#tables)                                           | Configure the styling of tables                                                        | [tables.tex](_config/internal/tables.tex)             |
 | ✓  | [Task Description](#task-description)                       | Appends a signed task description and your proposal                                    | [proposal.tex](_config/internal/proposal.tex)         |
 | ✓  | [Titlepage](#titlepage)                                     | Styling for the titlepage                                                              | [titlepage.tex](_config/internal/titlepage.tex)       |
-| ✓  | [translation.tex](_config/internal/translation.tex)         | Provide translation support for the template/document                                  | [translations.tex](_config/internal/translations.tex) |
+| ✓  | [Translations](#translations)                               | Provide translation support for the template/document                                  | [translation.tex](_config/internal/translation.tex) |
 |    | [Units](#units)                                             | Provide support for (si-)units                                                         | [units.tex](_config/internal/units.tex)               |
 
 #### The Common Module
@@ -202,6 +202,7 @@ Of course, not all options are equally important. Those of importance are at the
 | Option            | Default       | Description                                                                                                                                    |
 |:----------------- |:--------------|:-----------------------------------------------------------------------------------------------------------------------------------------------|
 | `citeInMarginpar` | true          | If set to false, citations will not appear in the marginpar (see [bibliography support](#bibliography-support)).                               |
+| `citeMarginparScope` | chapter    | How often a citation may repeat in the margin: once per `chapter`, `section`, `subsection`, `page`, `document`, or `always` (see [bibliography support](#bibliography-support)). |
 | `draft`           | false         | If set to true, the document will be compiled in draft mode (showing overfull boxes, ...).                                                     |
 | `enhanceMath`     | true          | Load advanced math fonts (see [fonts](#fonts)).                                                                                                 |
 | `field`           | computer science | The field of study shown on the titlepage (translated by default).                                                                          |
@@ -258,6 +259,7 @@ flowchart TD
     meta --- field("`<code>field</code>`")
 
     layout --- citeInMarginpar("`<code>citeInMarginpar</code>`")
+    layout --- citeMarginparScope("`<code>citeMarginparScope</code>`")
     layout --- paper("`<code>paper</code>`")
     layout --- marginpars{{marginpars}}
     marginpars --- marginpar("`<code>marginpar</code>`")
@@ -353,8 +355,11 @@ If you want bibliography support, but do not want cites to appear in the margin,
 ]{thesis}
 ```
 
+To keep the margin readable, a citation appears there at most once per `citeMarginparScope`, which may be `chapter` (the default), `section`, `subsection`, `page`, `document`, or `always` (never suppress).
+Unnumbered units (like `\section*`) do not advance their counter and hence share the scope of the preceding numbered one.
+
 Even without disabling this setting, this module provides you with the `\plaincite{...}` macro which does not write the citation in the marginpar (`\noside{...}` and `\disablesidetrue` work as well).
-If on the other hand you want to willfully force a citation to appear in the sidebar, you can use the `\forcecite{...}` command. And, if you just want to have a cite appear in the marginpar, you can use the `\sidecite{...}` command.
+If on the other hand you want to willfully force a citation to appear in the sidebar, you can use the `\forcecite{...}` command, which ignores the scope suppression. And, if you just want to have a cite appear in the marginpar, you can use the `\sidecite{...}` command.
 
 As a side-effect, this module provides the `\enquote{...}` command by the [csquotes](https://ctan.org/pkg/csquotes) package which allows you to easily typeset texts within **c**ontext-**s**ensitive (and language dependent) quotes.
 
@@ -389,6 +394,8 @@ For example, it causes figures and tables to follow a non-standard numbering sch
 If you (for whatever unfathomable reason) dislike this scheme, the [document class option](#the-common-module) `pageInFloatRef` can be set to false to revert to the default LaTeX numbering.
 This still leaves you with the tools to register your own (see below), but disables the automatic hooks into the float environments.
 As the scheme already encodes the page, references to floats do not produce `on page` sidenotes with it &mdash; use the `floatRefSidenotes` option to control this explicitly.
+
+Only floats with a caption claim a number, `longtable` included.
 
 You can use the float environments (`figure`, `table`, ...) as well as captions (`\caption`, ...) as usual. Usually we try to place captions for figures below the graphic, while we place captions before/above tables.
 
@@ -546,7 +553,8 @@ The [xlistings][] package is part of this template under [./_config/xlistings.st
 The margin paragraphs module has the base control of over the sidebar, using a combination of the [mparhack][] (fixes for marginpar), [ifoddpage][] (to detect page counts), and [ragged2e][] package (for improved ragged writing), as well as either the cheaper [marginnote][] package (if in `draft` mode) or the [scrlayer-notecolumn][] package (supports column breaks). Although we load this plethora of packages, there are just a couple of commands that you should know about:
 
 - `\sidenote[<yshift>]{<content>}` typesets the content into the margin.\
-  The starred variant `\sidenote*[<yshift>]{<content>}` relies on `\makenote*` when using the [scrlayer-notecolumn][] package and prevents the expansion of the content. These commands can be nested (which may appear accidentally) but may need additional passes to work, if you do not want nesting to appear, you can add a `\disablesidetrue` to the `\thesissidebarhook` (see below).
+  Both `\sidenote` and its starred variant `\sidenote*[<yshift>]{<content>}` rely on `\makenote*` when using the [scrlayer-notecolumn][] package and do not expand their content. These commands can be nested (which may appear accidentally) but may need additional passes to work, if you do not want nesting to appear, you can add a `\disablesidetrue` to the `\thesissidebarhook` (see below).
+- `\expandsidenote[<yshift>]{<content>}` expands its content instead, capturing transient values like `\glslabel`. Used by the class internals; fragile commands (`\label`, `\captionsetup`) do not survive it.
 - `\setmarginfont{<font>}` to set the font and color used in the margin.\
   You can use `\marginfont` to access the current font (with [scrlayer-notecolumn][] there is technically the `notecolumn.marginpar` koma-font too, but this is not reliable with `draft` mode)
 - `\noside{...}` disables `\sidenote`(s) commands in its argument\

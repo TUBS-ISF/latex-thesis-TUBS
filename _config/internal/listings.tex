@@ -1,7 +1,6 @@
 \makeatletter
-\ifluatex \PassOptionsToPackage{nodefaultfont}{xlistings} \fi
 \RequirePackage[fakeminted=true,extendednums,style={plain number}]{_config/xlistings}
-\appto\xlstLanguageSearchPath{,_config/,_config/internal,_config/langs}
+\appto\xlstLanguageSearchPath{,_config/,_config/internal/,_config/langs/}
 
 \ifluatex\else\RequirePackage{mdsymbol}\fi
 \def\LeftArrow{\text{\BeginAccSupp{method=escape,ActualText={<-}}\(\leftarrow\)\EndAccSupp{}}}
@@ -25,7 +24,10 @@
  {numbers: \@declaredcolor{@numcolor}}%
 }
 \lstset{
-   aboveskip=\z@,belowskip=\z@
+   aboveskip=\z@,belowskip=\z@,
+   % xlistings sets the basicstyle only within its own styles, so a bare
+   % \lstinline or lstlisting would inherit the serif body font
+   basicstyle=\ttfamily
 }
 
 \crefname{lstlisting}{Listing}{Listings}%
