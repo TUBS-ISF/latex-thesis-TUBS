@@ -2,7 +2,7 @@
 \RequirePackage{subcaption}
 
 \def\thesis@fig@style@nonbold#1{% \color{@primary}
-  {\hypersetup{allcolors=@primary}#1}%
+        {\hypersetup{allcolors=@primary}#1}%
 }
 \def\thesis@fig@style#1{\thesis@fig@style@nonbold{{\bfseries#1}}}
 
@@ -10,16 +10,16 @@
 \DeclareCaptionLabelFormat{thesis-caption-theorems}{\thesis@fig@style{\itshape#1~#2\space\space}}
 
 \captionsetup{
-   format=plain,
-   indention=0ex,
-   textfont={color=black,rm,sl,footnotesize},
-   labelformat=thesis-caption,
-   labelsep=none,
-   hypcapspace=.66\baselineskip,
-   aboveskip=.5\baselineskip,
-   justification=RaggedRight,
-   singlelinecheck=false,
-   font={footnotesize}
+    format=plain,
+    indention=0ex,
+    textfont={color=black,rm,sl,footnotesize},
+    labelformat=thesis-caption,
+    labelsep=none,
+    hypcapspace=.66\baselineskip,
+    aboveskip=.5\baselineskip,
+    justification=RaggedRight,
+    singlelinecheck=false,
+    font={footnotesize}
 }
 
 
@@ -32,58 +32,59 @@
 \InitPageCounter{figure}\InitPageCounter{table}\InitPageCounter{lstlisting}
 % #1 type like figure | table | ..., #2 counter
 \def\CountThisPageWrite#1#2{%
-\expandafter\providecommand\csname c@#1@#2\endcsname{0}% a default value
-\protected@write\@auxout{}{% {\csname ext@#1\endcsname}
-    \csxdef{c@#1@#2}{\thepage}%
-  }%
+    \expandafter\providecommand\csname c@#1@#2\endcsname{0}% a default value
+    \protected@write\@auxout{}{% {\csname ext@#1\endcsname}
+        \csxdef{c@#1@#2}{\thepage}%
+    }%
 }
 \def\curpgnum{0}
 \def\CountThisPage#1#2{%
-  % set counter for unique counting
-  \stepcounter{c@@#1@@lb}%
-  % write similar to label, but use the unique counter
-  \CountThisPageWrite{#1}{\arabic{c@@#1@@lb}}%
-  % now, count the number of occurrences on the given page
-  \xdef\curpgnum{\csname c@#1@\arabic{c@@#1@@lb}\endcsname}%
-  \ifcsname c@\curpgnum @#1@lb\endcsname\else\csxdef{c@\curpgnum @#1@lb}{0}\fi
-  % increment the counter for the given page
-  \csxdef{c@\curpgnum @#1@lb}{\the\numexpr\csname c@\curpgnum @#1@lb\endcsname+1}%
-  % store the counter to the uniquely identified macro
-  % \typeout{Counting c@\curpgnum @#1@lb to #2 with \csname c@\curpgnum @#1@lb\endcsname (\csuse{c@#1@\arabic{c@@#1@@lb}})}%
-  \csxdef{#2}{\csname c@\curpgnum @#1@lb\endcsname}%
-  % \typeout{Counting for \arabic{c@@#1@@lb} (\csname ext@#1\endcsname, pgnum: \curpgnum, tar: \csuse{#2})}%
+    % set counter for unique counting
+    \stepcounter{c@@#1@@lb}%
+    % write similar to label, but use the unique counter
+    \CountThisPageWrite{#1}{\arabic{c@@#1@@lb}}%
+    % now, count the number of occurrences on the given page
+    \xdef\curpgnum{\csname c@#1@\arabic{c@@#1@@lb}\endcsname}%
+    \ifcsname c@\curpgnum @#1@lb\endcsname\else\csxdef{c@\curpgnum @#1@lb}{0}\fi
+    % increment the counter for the given page
+    \csxdef{c@\curpgnum @#1@lb}{\the\numexpr\csname c@\curpgnum @#1@lb\endcsname+1}%
+    % store the counter to the uniquely identified macro
+    % \typeout{Counting c@\curpgnum @#1@lb to #2 with \csname c@\curpgnum @#1@lb\endcsname (\csuse{c@#1@\arabic{c@@#1@@lb}})}%
+    \csxdef{#2}{\csname c@\curpgnum @#1@lb\endcsname}%
+    % \typeout{Counting for \arabic{c@@#1@@lb} (\csname ext@#1\endcsname, pgnum: \curpgnum, tar: \csuse{#2})}%
 }
 \robustify\CountThisPage
 \def\thesissetfig{\CountThisPage{figure}{c@figure@lb}}
 \def\thesissettbl{\CountThisPage{table}{c@table@lb}}
 \def\thesissetlst{\CountThisPage{lstlisting}{c@lstlisting@lb}}
 
+\newif\ifthesis@floatcounted
+
 \ifthesis@pageInFloatRef
 \def\thesis@figure{figure}\def\thesis@table{table}\def\thesis@lstlisting{lstlisting}
 \def\thesis@subfigure{subfigure}
-\newif\ifthesis@floatcounted
 % a float claims its number as soon as it starts (so that subcaptions can refer to it),
 % but a float without any caption must not consume one -- we therefore remember what the
 % float claimed and roll the claim back if no caption ever used it (this also covers
 % captions which are deferred out of the float, e.g. into the margin with \sidenote)
 \def\thesis@rb@name{}\def\thesis@rb@val{}
 \def\thesis@floatclaim#1#2{%
-  #1% assigns the number and updates \curpgnum
-  \xdef\thesis@rb@name{c@\curpgnum @#2@lb}%
-  \expandafter\xdef\expandafter\thesis@rb@val\expandafter{\csname\thesis@rb@name\endcsname}%
-  \global\thesis@floatcountedtrue
+    #1% assigns the number and updates \curpgnum
+    \xdef\thesis@rb@name{c@\curpgnum @#2@lb}%
+    \expandafter\xdef\expandafter\thesis@rb@val\expandafter{\csname\thesis@rb@name\endcsname}%
+    \global\thesis@floatcountedtrue
 }
 \def\thesis@floatrollback{%
-  \ifthesis@floatcounted% the claim was never used by a caption
+    \ifthesis@floatcounted% the claim was never used by a caption
     \expandafter\ifx\csname\thesis@rb@name\endcsname\thesis@rb@val% and nothing claimed after it
-      \expandafter\xdef\csname\thesis@rb@name\endcsname{\the\numexpr\thesis@rb@val-1\relax}%
+    \expandafter\xdef\csname\thesis@rb@name\endcsname{\the\numexpr\thesis@rb@val-1\relax}%
     \fi
-  \fi
-  \global\thesis@floatcountedfalse
+    \fi
+    \global\thesis@floatcountedfalse
 }
 \apptocmd\@xfloat{%
-  \ifx\@captype\thesis@figure\thesis@floatclaim\thesissetfig{figure}\fi
-  \ifx\@captype\thesis@table\thesis@floatclaim\thesissettbl{table}\fi
+    \ifx\@captype\thesis@figure\thesis@floatclaim\thesissetfig{figure}\fi
+    \ifx\@captype\thesis@table\thesis@floatclaim\thesissettbl{table}\fi
 }{}{}
 \apptocmd\end@float{\thesis@floatrollback}{}{}
 \apptocmd\end@dblfloat{\thesis@floatrollback}{}{}
@@ -99,22 +100,22 @@
 % \caption@refstepcounter, so we claim the number there (and roll it back again if
 % the table carries no caption at all)
 \AddToHook{package/longtable/after}{%
-  \pretocmd\LT@array{%
-    \edef\thesis@lt@type{\LTcaptype}%
-    \ifx\thesis@lt@type\thesis@table\thesis@floatclaim\thesissettbl{table}\fi
-  }{}{}%
-  % the assignment has to happen within the \noalign group of the caption, as we are
-  % in the middle of an alignment here
-  \patchcmd\LT@caption{\noalign\bgroup}{\noalign\bgroup\global\thesis@floatcountedfalse}{}{}%
-  \apptocmd\endlongtable{\thesis@floatrollback}{}{}%
+    \pretocmd\LT@array{%
+        \edef\thesis@lt@type{\LTcaptype}%
+        \ifx\thesis@lt@type\thesis@table\thesis@floatclaim\thesissettbl{table}\fi
+    }{}{}%
+    % the assignment has to happen within the \noalign group of the caption, as we are
+    % in the middle of an alignment here
+    \patchcmd\LT@caption{\noalign\bgroup}{\noalign\bgroup\global\thesis@floatcountedfalse}{}{}%
+    \apptocmd\endlongtable{\thesis@floatrollback}{}{}%
 }
 \AddToHook{begindocument/end}{%
-  \pretocmd\caption@refstepcounter{\thesisfloathooks}{}{}%
-  \def\p@subfigure{\thefigure/}%
-  \def\p@subtable{\thetable/}%
+    \pretocmd\caption@refstepcounter{\thesisfloathooks}{}{}%
+    \def\p@subfigure{\thefigure/}%
+    \def\p@subtable{\thetable/}%
 }
 \AddToHook{cmd/caption/before}{%
-  \thesisfigurehooks
+    \thesisfigurehooks
 }%
 \def\HookCustomEnvCount#1#2{\pretocmd\caption@iftype{#2}\relax\relax}
 \fi
@@ -132,17 +133,17 @@
 \RequirePackage{alphalph}
 % i do not like italic small caps, furthermore, most fonts do not support them
 \def\@@formatcounter#1#2{%
-  \smash{\textit{\LiningFigures% use lining figures for references
+    \smash{\textit{\LiningFigures% use lining figures for references
     #1}%
     %/
     %\kern-.33pt i am no fan of modified small caps
     \textup{\textsc{\alphalph#2}}%
-  }%
+    }%
 }%
 \robustify{\@@formatcounter}%
 
 \def\@formatcounter#1#2{%
-  \@@formatcounter{\curpgnum}{#2}%
+    \@@formatcounter{\curpgnum}{#2}%
 }
 
 \ifthesis@pageInFloatRef
@@ -150,21 +151,21 @@
 \def\thetable{\@formatcounter t{\c@table@lb}}
 % this has to happen very late because... well... thank you listings
 \AddToHook{begindocument/end}{%
-  \def\thelstlisting{\@formatcounter l{\c@lstlisting@lb}}%
-  \let\thesis@orig@lstmakecaption\lst@MakeCaption
-  \def\lst@MakeCaption#1{%
-    \ifx #1t\ifx\lst@@caption\@empty\else\thesissetlst\fi\fi
-    \thesis@orig@lstmakecaption{#1}%
-  }%
+    \def\thelstlisting{\@formatcounter l{\c@lstlisting@lb}}%
+    \let\thesis@orig@lstmakecaption\lst@MakeCaption
+    \def\lst@MakeCaption#1{%
+        \ifx #1t\ifx\lst@@caption\@empty\else\thesissetlst\fi\fi
+        \thesis@orig@lstmakecaption{#1}%
+    }%
 }
 \fi
 
 \def\makelongrefs{%
-\ifthesis@pageInFloatRef
-\def\thefigure{Figure~\@formatcounter f{\c@figure@lb}}%
-\def\thetable{Table~\@formatcounter t{\c@table@lb}}%
-\def\thelstlisting{Listing~\@formatcounter l{\c@lstlisting@lb}}
-\fi
+    \ifthesis@pageInFloatRef
+    \def\thefigure{Figure~\@formatcounter f{\c@figure@lb}}%
+    \def\thetable{Table~\@formatcounter t{\c@table@lb}}%
+    \def\thelstlisting{Listing~\@formatcounter l{\c@lstlisting@lb}}
+    \fi
 % \def\thesubfigure{Subfigure~\@formatcounter f{\c@figure@lb/\alph{subfigure}}}%
 % \def\theexa{Example~\@formatcounter e{\c@exa@lb}}%
 % \def\thents{Note~\@formatcounter n{\c@nts@lb}}%
@@ -176,14 +177,14 @@
 
 % just my likings
 \AtBeginDocument{%
-\def\fps@figure{tbp}\let\fps@table\fps@figure
-\c@topnumber\tw@
-\c@bottomnumber\@ne
-\c@totalnumber\thr@@
-\def\floatpagefraction{.7}% 0.2
-\def\topfraction{.7}% 0.7
-\g@addto@macro\end@float{%
-\ifnum\@floatpenalty<0 \ifnum\@floatpenalty<-\@Mii
-\else\ifhmode\if@ignore\penalty\@M \hskip\z@skip\fi\fi
-\fi\fi}%
+    \def\fps@figure{tbp}\let\fps@table\fps@figure
+    \c@topnumber\tw@
+    \c@bottomnumber\@ne
+    \c@totalnumber\thr@@
+    \def\floatpagefraction{.7}% 0.2
+    \def\topfraction{.7}% 0.7
+    \g@addto@macro\end@float{%
+        \ifnum\@floatpenalty<0 \ifnum\@floatpenalty<-\@Mii
+        \else\ifhmode\if@ignore\penalty\@M \hskip\z@skip\fi\fi
+        \fi\fi}%
 }
