@@ -74,6 +74,12 @@ You can use \texttt{\textbackslash showsymbols} to propose a list of symbols to 
     \label{fig:main}
 \end{figure}
 
+\begin{figure}
+    \centering\includegraphics[width=0.15\linewidth]{img/example}
+    \caption{Second Figure.}
+    \label{fig:two}
+\end{figure}
+
 A viable way to group different figures is the \textit{subfigures} command, a short example can be seen at \cref{fig:main}.
 A single subfigure can be referenced on its own, like \cref{fig:first}.
 This is \cref{fig:main} with the name \nameref{fig:main}.\footurl{www.google.com}{2024-12-24}
@@ -96,7 +102,7 @@ See ulm university\foothref{https://web.archive.org/web/20241221140233/https://w
 Notes, references, and small figures can be placed in the margin with \texttt{\textbackslash sidenote}.\sidenote{Like this one, which is typeset next to its anchor.}
 A figure that is too small to deserve a float of its own is a good candidate for the margin:\sidenote{%
     \centering
-    \includegraphics[width=.8\linewidth]{img/example.pdf}%
+    \includegraphics[width=.8\linewidth]{img/example}%
     \captionof{figure}{A figure within the margin.}%
     \label{fig:sidenote}%
 }
