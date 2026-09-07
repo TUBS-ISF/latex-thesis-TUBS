@@ -174,6 +174,44 @@
 \captionsetup{labelformat=noprefix}
 \fi
 
+% region empty lists
+\newif\ifthesis@toc@complete
+\def\thesis@toc@complete{\global\thesis@toc@completetrue}
+\def\thesis@toc@register#1{\csgdef{thesis@toc@used@#1}{}}
+\def\thesis@toc@note#1{%
+  \ifcsname thesis@toc@seen@#1\endcsname\else
+    \csgdef{thesis@toc@seen@#1}{}%
+    \if@filesw\protected@write\@mainaux{}{\string\thesis@toc@register{#1}}\fi
+    \ifcsname thesis@toc@hidden@#1\endcsname
+      \thesis@warn{The list of '#1' was omitted as it was empty, it will appear with the next LaTeX pass}%
+    \fi
+  \fi
+}
+\long\def\thesis@addcontentsline#1#2#3{%
+  \thesis@toc@note{#1}\thesis@orig@addcontentsline{#1}{#2}{#3}%
+}
+\def\thesisHideEmptyList#1#2{%
+  \ifthesis@toc@complete
+    \ifcsname thesis@toc@used@#1\endcsname\else
+      \ifcsname #2\endcsname\csgdef{thesis@toc@hidden@#1}{}\csdef{#2}{}\fi
+    \fi
+  \fi
+}
+\ifthesis@hideEmptyLists
+\AddToHook{enddocument/afterlastpage}{%
+  \if@filesw\immediate\write\@mainaux{\string\thesis@toc@complete}\fi
+}
+\AddToHook{begindocument/end}{%
+  \let\thesis@orig@addcontentsline\addcontentsline
+  \let\addcontentsline\thesis@addcontentsline
+  \thesisHideEmptyList{lof}{listoffigures}%
+  \thesisHideEmptyList{lot}{listoftables}%
+  \thesisHideEmptyList{lol}{lstlistoflistings}%
+  \thesisHideEmptyList{lop}{listofpseudo}%
+}
+\fi
+% endregion
+
 % just my likings
 \AtBeginDocument{%
 \def\fps@figure{tbp}\let\fps@table\fps@figure

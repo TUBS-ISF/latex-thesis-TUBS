@@ -232,6 +232,7 @@ Of course, not all options are equally important. Those of importance are at the
 | `enhanceMath`     | true          | Load advanced math fonts (see [fonts](#fonts)).                                                                                                 |
 | `field`           | computer science | The field of study shown on the titlepage (translated by default).                                                                          |
 | `floatRefSidenotes` | auto        | Whether references to floats produce `on page` sidenotes. With `auto` they only appear if `pageInFloatRef` is `false`, as the `13A` numbering already encodes the page. |
+| `hideEmptyLists`  | true          | Omit `\listoffigures`, `\listoftables`, `\lstlistoflistings`, and `\listofpseudo` entirely (heading and page included) if they have no entries (see [floats](#empty-lists)). |
 | `license`         | CCBY          | The license to use for the document (see [licensing](#licensing)).                                                                             |
 | `pageInFloatRef`  | true          | This automatically activates the effects of the [floats module](#floats). If you set this to `false` you get the default LaTeX numbering.      |
 | `profile`         | uulm-sp       | The profile to use for the document (see the [profiles](#adapting-for-other-universities-or-institutes)).                                      |
@@ -254,6 +255,7 @@ Of course, not all options are equally important. Those of importance are at the
 | `print`           | false         | If set to true, the document will be compiled in print mode (complements the digital option).                                                  |
 | `rmtitle`         | true          | If set to false, the document will be compiled with a sans-serif title (see [fonts](#fonts), complements `sftitle`).                           |
 | `sftitle`         | false         | If set to true, the document will be compiled with a sans-serif title (see [fonts](#fonts), complements `rmtitle`).                            |
+| `showEmptyLists`  | false         | If set to true, empty lists of figures/tables/... are printed as usual (complements `hideEmptyLists`, see [floats](#empty-lists)).             |
 | `twoside`         | false         | If set to true, the document will be compiled in twoside mode (complements `oneside`).                                                         |
 
 <details>
@@ -289,6 +291,9 @@ flowchart TD
     layout --- marginpars{{marginpars}}
     marginpars --- marginpar("`<code>marginpar</code>`")
     marginpars --- nomarginpar("`<code>nomarginpar</code>`")
+    layout --- lists{{lists}}
+    lists --- hideEmptyLists("`<code>hideEmptyLists</code>`")
+    lists --- showEmptyLists("`<code>showEmptyLists</code>`")
     layout --- pages{{pages}}
     pages --- oneside("`<code>oneside</code>`")
     pages --- twoside("`<code>twoside</code>`")
@@ -460,6 +465,13 @@ Usually, the caption is placed above the table, to take the role of a "title". S
 See the [tables module](#tables) for more information on tables.
 
 </details>
+
+##### Empty Lists
+
+By default (class option `hideEmptyLists`), `\listoffigures`, `\listoftables`, `\lstlistoflistings`, and `\listofpseudo` print nothing at all &mdash; no heading, no page &mdash; when they have no entries. This way you can keep all of them in your main document and only those you actually need show up. Set the [document class option](#the-common-module) `showEmptyLists` if you want the empty lists back.
+
+Which lists have entries is recorded in the `.aux` file, so a list that becomes non-empty needs one additional LaTeX pass to appear (the class tells you so in the log). To keep the first pass of a fresh document from being disrupted, nothing is hidden until a complete `.aux` file is available.
+If you register a list of your own, you can add it with `\thesisHideEmptyList{<file ext>}{<command name>}` (e.g. `\thesisHideEmptyList{lop}{listofpseudo}`) within `\AddToHook{begindocument/end}{...}`.
 
 At the moment, we have no detailed guide about how you can register your own floats to the new page ref counting mechanism. In short, you have to use `\InitPageCounter{<float>}` with (ideally) the name of your floating environment, add a new hook which uses `\CountThisPage{<float>}{c@<float>@lb}` to count the floats at the beginning of the environment (usually with something like `\AtBeginEnvironment{<float>}{\HookCustomEnvCount{<float file ext>}{<page count hook>}}`) and provide a counter rendering (`\the<float>` which usually relies on `\@formatcounter`). The [pseudo](#pseudocode) module provides an example for this, registering the `pseudo` float (see the [pseudocode.tex](_config/internal/pseudocode.tex) file).
 
