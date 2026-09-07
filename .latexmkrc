@@ -26,3 +26,4 @@ push @generated_exts, 'glo', 'gls', 'glg';
 push @generated_exts, 'acn', 'acr', 'alg';
 push @generated_exts, 'nto', 'nts', 'ntsl';
 push @generated_exts, 'tcc*', 'slnc', 'wrt';
+push @generated_exts, 'sfl*';

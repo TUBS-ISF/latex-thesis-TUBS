@@ -124,7 +124,8 @@
 
 % \global\c@exa@lb0 \global\c@nts@lb0
 % \AddToHook{shipout/after}{\global\c@figure@lb0 \global\c@table@lb0}
-\long\def\thesis@sn@gd@#1{\parbox\linewidth{\insidenotetrue\let\label\creflbl\thesis@ragged\thesissidebarhook#1\vskip2.25pt}}
+\def\thesis@sn@setup{\insidenotetrue\let\label\creflbl\thesis@ragged\thesissidebarhook}
+\long\def\thesis@sn@gd@#1{\parbox\linewidth{\thesis@sn@setup#1\vskip2.25pt}}
 % patch faulty cref restoration in notecolumn
 
 \def\creflbl#1{\cref@old@label{#1}\@bsphack\edef\@tempa{{page}{\the\c@page}}\setcounter{page}{1}\edef\@tempb{\thepage}\expandafter\setcounter\@tempa\cref@constructprefix{page}{\cref@result}\protected@write\@auxout{}{\string\newlabel{#1@cref}{{\cref@currentlabel}{[\@tempb][\arabic{page}][\cref@result]\thepage}{}{}{}}}\@esphack}
@@ -163,7 +164,7 @@
 \ifthesis@pageInFloatRef
 \def\thefigure{Figure~\@formatcounter f{\c@figure@lb}}%
 \def\thetable{Table~\@formatcounter t{\c@table@lb}}%
-\def\thelstlisting{Listing~\@formatcounter l{\c@lstlisting@lb}}
+\def\thelstlisting{Listing~\@formatcounter l{\c@lstlisting@lb}}%
 \fi
 % \def\thesubfigure{Subfigure~\@formatcounter f{\c@figure@lb/\alph{subfigure}}}%
 % \def\theexa{Example~\@formatcounter e{\c@exa@lb}}%
@@ -173,6 +174,40 @@
 \DeclareCaptionLabelFormat{noprefix}{\thesis@fig@style{\itshape\makelongrefs#2:~~}}
 \captionsetup{labelformat=noprefix}
 \fi
+
+% region margin floats
+\RequirePackage{environ}
+\newcounter{thesis@sidefloat@n}
+\def\thesissidefloathook{\captionsetup{font=scriptsize,textfont={color=black,rm,sl,scriptsize}}}
+\ifthesis@marginpar
+\RequirePackage{fancyvrb}
+\long\def\thesis@sidefloat#1#2#3{\sidenote[#3]{\captionsetup{type=#2}\thesissidefloathook#1}}
+\def\thesis@sidefloat@open#1{%
+  \stepcounter{thesis@sidefloat@n}%
+  \def\thesis@sidefloat@type{#1}%
+  \VerbatimEnvironment
+  \edef\thesis@sidefloat@file{\jobname.sfl\arabic{thesis@sidefloat@n}}%
+  \expandafter\VerbatimOut\expandafter{\thesis@sidefloat@file}%
+}
+\def\thesis@sidefloat@close{%
+  \endVerbatimOut
+  \edef\thesis@sidefloat@args{%
+    {\noexpand\input{\thesis@sidefloat@file}}{\thesis@sidefloat@type}{\z@}%
+  }%
+  \expandafter\thesis@sidefloat\thesis@sidefloat@args
+}
+\else
+\long\def\thesis@sidefloat#1#2#3{\@float{#2}[htbp]#1\end@float}
+\def\thesis@sidefloat@open#1{\@float{#1}[htbp]}
+\def\thesis@sidefloat@close{\end@float}
+\fi
+\NewEnviron{sidefloat}[2][\z@]{\expandafter\thesis@sidefloat\expandafter{\BODY}{#2}{#1}}
+\NewEnviron{sidefig}[1][\z@]{\expandafter\thesis@sidefloat\expandafter{\BODY}{figure}{#1}}
+\NewEnviron{sidetbl}[1][\z@]{\expandafter\thesis@sidefloat\expandafter{\BODY}{table}{#1}}
+\newenvironment{sidefloat*}[1]{\thesis@sidefloat@open{#1}}{\thesis@sidefloat@close}
+\newenvironment{sidefig*}{\thesis@sidefloat@open{figure}}{\thesis@sidefloat@close}
+\newenvironment{sidetbl*}{\thesis@sidefloat@open{table}}{\thesis@sidefloat@close}
+% endregion
 
 % region empty lists
 \newif\ifthesis@toc@complete

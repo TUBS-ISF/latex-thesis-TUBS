@@ -72,13 +72,27 @@ See ulm university\foothref{https://web.archive.org/web/20241221140233/https://w
 \end{table}
 
 Notes, references, and small figures can be placed in the margin with \texttt{\textbackslash sidenote}.\sidenote{Like this one, which is typeset next to its anchor.}
-A figure that is too small to deserve a float of its own is a good candidate for the margin:\sidenote{%
+A figure that is too small to deserve a float of its own is a good candidate for the margin, which is what the \texttt{sidefig} environment is for:
+\begin{sidefig}
    \centering
-   \includegraphics[width=.8\linewidth]{img/example.pdf}%
-   \captionof{figure}{A figure within the margin.}%
-   \label{fig:sidenote}%
-}
+   \includegraphics[width=.8\linewidth]{img/example.pdf}
+   \caption{A figure within the margin.}
+   \label{fig:sidenote}
+\end{sidefig}
 Such a figure is numbered and referenced like any other one, see \cref{fig:sidenote}.
+The \texttt{sidetbl} environment does the same for tables, see \cref{tab:sidenote}.
+\begin{sidetbl}
+   \caption{A table within the margin.}
+   \label{tab:sidenote}
+   \begin{tabular}{cc}
+      \toprule
+      A & B \\
+      \midrule
+      1 & 2 \\
+      \bottomrule
+   \end{tabular}
+\end{sidetbl}
+Their starred variants \texttt{sidefig*} and \texttt{sidetbl*} accept verbatim content such as listings (see \cref{fig:sidelst}).
 The optional argument shifts a note vertically, which is helpful to align it with its surroundings.\sidenote[1.5\baselineskip]{This note is shifted downwards by one and a half lines.}
 
 \section{Problem Statement}
@@ -151,6 +165,26 @@ print(x)
 \end{minted}
 
 We can reference code as well, see: \cref{jeah}.
+
+Verbatim content such as a listing does not survive the way \texttt{sidefig} collects its body, which is what the starred \texttt{sidefig*} and \texttt{sidetbl*} environments are for.
+\begin{sidefig*}
+\begin{lstlisting}[language=R]
+x <- c(1, 2)
+print(x)
+\end{lstlisting}
+\caption{A listing within the margin.}
+\label{fig:sidelst}
+\end{sidefig*}
+They take no vertical shift, everything else works as before.
+Any other float type is available with \texttt{sidefloat} and \texttt{sidefloat*}, which take the type as an argument, so a listing can be a listing as well (see \cref{lst:sidelst}).
+\begin{sidefloat*}{lstlisting}
+\xlstsetmintedstyle{plain}
+\begin{minted}{R}
+print("hi")
+\end{minted}
+\caption{A real listing in the margin.}
+\label{lst:sidelst}
+\end{sidefloat*}
 
 \section{Contributions}
 
