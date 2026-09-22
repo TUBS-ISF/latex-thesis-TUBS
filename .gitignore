@@ -1,6 +1,5 @@
 # used by the l3build system
 build/
-thesis.pdf
 *-SAVE-ERROR
 # verbatim bodies of sidefig*/sidetbl*
 *.sfl[0-9]*

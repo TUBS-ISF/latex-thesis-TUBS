@@ -1,17 +1,42 @@
 \setchaptertoc
 \chapter{Evaluation}\label{chp:evaluation}
-\csummary{Is it good?}
+\csummary{Is algorithm B better than algorithm C?} %This command can be used to display short exemplary questions in the contents overview
 
 \begin{summary}
 We did\ldots
 \end{summary}
 
-\section{Methodology}
+\section[RQs]{Research Questions}\label{sec:evaluation:rqs}
+What are your central research questions?
 
-\section[Study 1]{Study 1: Penguins in the Wild}
+\begin{rqs}
+    \item \label{rq:concept} What is the concept of this thesis?
+    \item \label{rq:implementation} How is the concept implemented?
+    \item \label{rq:evaluation} How is the implementation evaluated?
+    \begin{rqs}
+        \item \label{rq:evaluation:correctness} How is the correctness evaluated? \begin{rqs}
+                                                                                      \item Please do not nest the questions that deep!
+        \end{rqs}
+        \item \label{rq:evaluation:performance} How is the performance evaluated?
+    \end{rqs}
+\end{rqs}
 
-\section[Study 2]{Study 2: Penguins in Captivity}
+We can now reference \ref{rq:concept} or with cleveref: \cref{rq:concept}.
+
+We can also reference sections, e.g., \cref{sec:evaluation:rqs}
+
+\section{Method}
+How did you perform your experiments?
+
+\section{Results}
+What are the results of your experiments?
 
 \section{Discussion}
+What are the answers to your research questions?
 
 \section[Threats]{Threats to Validity}
+What threatens the validity of your findings?
+Discuss at least internal and external validity, possibly more~\cite{WRH+12}.
+
+\section{Summary}
+Short summary of this section
