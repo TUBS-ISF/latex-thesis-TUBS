@@ -69,22 +69,22 @@
 % captions which are deferred out of the float, e.g. into the margin with \sidenote)
 \def\thesis@rb@name{}\def\thesis@rb@val{}
 \def\thesis@floatclaim#1#2{%
-    #1% assigns the number and updates \curpgnum
-    \xdef\thesis@rb@name{c@\curpgnum @#2@lb}%
-    \expandafter\xdef\expandafter\thesis@rb@val\expandafter{\csname\thesis@rb@name\endcsname}%
-    \global\thesis@floatcountedtrue
+  #1% assigns the number and updates \curpgnum
+  \xdef\thesis@rb@name{c@\curpgnum @#2@lb}%
+  \expandafter\xdef\expandafter\thesis@rb@val\expandafter{\csname\thesis@rb@name\endcsname}%
+  \global\thesis@floatcountedtrue
 }
 \def\thesis@floatrollback{%
-    \ifthesis@floatcounted% the claim was never used by a caption
+  \ifthesis@floatcounted% the claim was never used by a caption
     \expandafter\ifx\csname\thesis@rb@name\endcsname\thesis@rb@val% and nothing claimed after it
-    \expandafter\xdef\csname\thesis@rb@name\endcsname{\the\numexpr\thesis@rb@val-1\relax}%
+      \expandafter\xdef\csname\thesis@rb@name\endcsname{\the\numexpr\thesis@rb@val-1\relax}%
     \fi
-    \fi
-    \global\thesis@floatcountedfalse
+  \fi
+  \global\thesis@floatcountedfalse
 }
 \apptocmd\@xfloat{%
-    \ifx\@captype\thesis@figure\thesis@floatclaim\thesissetfig{figure}\fi
-    \ifx\@captype\thesis@table\thesis@floatclaim\thesissettbl{table}\fi
+  \ifx\@captype\thesis@figure\thesis@floatclaim\thesissetfig{figure}\fi
+  \ifx\@captype\thesis@table\thesis@floatclaim\thesissettbl{table}\fi
 }{}{}
 \apptocmd\end@float{\thesis@floatrollback}{}{}
 \apptocmd\end@dblfloat{\thesis@floatrollback}{}{}
@@ -100,19 +100,19 @@
 % \caption@refstepcounter, so we claim the number there (and roll it back again if
 % the table carries no caption at all)
 \AddToHook{package/longtable/after}{%
-    \pretocmd\LT@array{%
-        \edef\thesis@lt@type{\LTcaptype}%
-        \ifx\thesis@lt@type\thesis@table\thesis@floatclaim\thesissettbl{table}\fi
-    }{}{}%
-    % the assignment has to happen within the \noalign group of the caption, as we are
-    % in the middle of an alignment here
-    \patchcmd\LT@caption{\noalign\bgroup}{\noalign\bgroup\global\thesis@floatcountedfalse}{}{}%
-    \apptocmd\endlongtable{\thesis@floatrollback}{}{}%
+  \pretocmd\LT@array{%
+    \edef\thesis@lt@type{\LTcaptype}%
+    \ifx\thesis@lt@type\thesis@table\thesis@floatclaim\thesissettbl{table}\fi
+  }{}{}%
+  % the assignment has to happen within the \noalign group of the caption, as we are
+  % in the middle of an alignment here
+  \patchcmd\LT@caption{\noalign\bgroup}{\noalign\bgroup\global\thesis@floatcountedfalse}{}{}%
+  \apptocmd\endlongtable{\thesis@floatrollback}{}{}%
 }
 \AddToHook{begindocument/end}{%
-    \pretocmd\caption@refstepcounter{\thesisfloathooks}{}{}%
-    \def\p@subfigure{\thefigure/}%
-    \def\p@subtable{\thetable/}%
+  \pretocmd\caption@refstepcounter{\thesisfloathooks}{}{}%
+  \def\p@subfigure{\thefigure/}%
+  \def\p@subtable{\thetable/}%
 }
 \AddToHook{cmd/caption/before}{%
     \thesisfigurehooks
@@ -125,7 +125,8 @@
 
 % \global\c@exa@lb0 \global\c@nts@lb0
 % \AddToHook{shipout/after}{\global\c@figure@lb0 \global\c@table@lb0}
-\long\def\thesis@sn@gd@#1{\parbox\linewidth{\insidenotetrue\let\label\creflbl\thesis@ragged\thesissidebarhook#1\vskip2.25pt}}
+\def\thesis@sn@setup{\insidenotetrue\let\label\creflbl\thesis@ragged\thesissidebarhook}
+\long\def\thesis@sn@gd@#1{\parbox\linewidth{\thesis@sn@setup#1\vskip2.25pt}}
 % patch faulty cref restoration in notecolumn
 
 \def\creflbl#1{\cref@old@label{#1}\@bsphack\edef\@tempa{{page}{\the\c@page}}\setcounter{page}{1}\edef\@tempb{\thepage}\expandafter\setcounter\@tempa\cref@constructprefix{page}{\cref@result}\protected@write\@auxout{}{\string\newlabel{#1@cref}{{\cref@currentlabel}{[\@tempb][\arabic{page}][\cref@result]\thepage}{}{}{}}}\@esphack}
@@ -151,21 +152,21 @@
 \def\thetable{\@formatcounter t{\c@table@lb}}
 % this has to happen very late because... well... thank you listings
 \AddToHook{begindocument/end}{%
-    \def\thelstlisting{\@formatcounter l{\c@lstlisting@lb}}%
-    \let\thesis@orig@lstmakecaption\lst@MakeCaption
-    \def\lst@MakeCaption#1{%
-        \ifx #1t\ifx\lst@@caption\@empty\else\thesissetlst\fi\fi
-        \thesis@orig@lstmakecaption{#1}%
-    }%
+  \def\thelstlisting{\@formatcounter l{\c@lstlisting@lb}}%
+  \let\thesis@orig@lstmakecaption\lst@MakeCaption
+  \def\lst@MakeCaption#1{%
+    \ifx #1t\ifx\lst@@caption\@empty\else\thesissetlst\fi\fi
+    \thesis@orig@lstmakecaption{#1}%
+  }%
 }
 \fi
 
 \def\makelongrefs{%
-    \ifthesis@pageInFloatRef
-    \def\thefigure{Figure~\@formatcounter f{\c@figure@lb}}%
-    \def\thetable{Table~\@formatcounter t{\c@table@lb}}%
-    \def\thelstlisting{Listing~\@formatcounter l{\c@lstlisting@lb}}
-    \fi
+\ifthesis@pageInFloatRef
+\def\thefigure{Figure~\@formatcounter f{\c@figure@lb}}%
+\def\thetable{Table~\@formatcounter t{\c@table@lb}}%
+\def\thelstlisting{Listing~\@formatcounter l{\c@lstlisting@lb}}%
+\fi
 % \def\thesubfigure{Subfigure~\@formatcounter f{\c@figure@lb/\alph{subfigure}}}%
 % \def\theexa{Example~\@formatcounter e{\c@exa@lb}}%
 % \def\thents{Note~\@formatcounter n{\c@nts@lb}}%
@@ -174,6 +175,78 @@
 \DeclareCaptionLabelFormat{noprefix}{\thesis@fig@style{\itshape\makelongrefs#2:~~}}
 \captionsetup{labelformat=noprefix}
 \fi
+
+% region margin floats
+\RequirePackage{environ}
+\newcounter{thesis@sidefloat@n}
+\def\thesissidefloathook{\captionsetup{font=scriptsize,textfont={color=black,rm,sl,scriptsize}}}
+\ifthesis@marginpar
+\RequirePackage{fancyvrb}
+\long\def\thesis@sidefloat#1#2#3{\sidenote[#3]{\captionsetup{type=#2}\thesissidefloathook#1}}
+\def\thesis@sidefloat@open#1{%
+  \stepcounter{thesis@sidefloat@n}%
+  \def\thesis@sidefloat@type{#1}%
+  \VerbatimEnvironment
+  \edef\thesis@sidefloat@file{\jobname.sfl\arabic{thesis@sidefloat@n}}%
+  \expandafter\VerbatimOut\expandafter{\thesis@sidefloat@file}%
+}
+\def\thesis@sidefloat@close{%
+  \endVerbatimOut
+  \edef\thesis@sidefloat@args{%
+    {\noexpand\input{\thesis@sidefloat@file}}{\thesis@sidefloat@type}{\z@}%
+  }%
+  \expandafter\thesis@sidefloat\thesis@sidefloat@args
+}
+\else
+\long\def\thesis@sidefloat#1#2#3{\@float{#2}[htbp]#1\end@float}
+\def\thesis@sidefloat@open#1{\@float{#1}[htbp]}
+\def\thesis@sidefloat@close{\end@float}
+\fi
+\NewEnviron{sidefloat}[2][\z@]{\expandafter\thesis@sidefloat\expandafter{\BODY}{#2}{#1}}
+\NewEnviron{sidefig}[1][\z@]{\expandafter\thesis@sidefloat\expandafter{\BODY}{figure}{#1}}
+\NewEnviron{sidetbl}[1][\z@]{\expandafter\thesis@sidefloat\expandafter{\BODY}{table}{#1}}
+\newenvironment{sidefloat*}[1]{\thesis@sidefloat@open{#1}}{\thesis@sidefloat@close}
+\newenvironment{sidefig*}{\thesis@sidefloat@open{figure}}{\thesis@sidefloat@close}
+\newenvironment{sidetbl*}{\thesis@sidefloat@open{table}}{\thesis@sidefloat@close}
+% endregion
+
+% region empty lists
+\newif\ifthesis@toc@complete
+\def\thesis@toc@complete{\global\thesis@toc@completetrue}
+\def\thesis@toc@register#1{\csgdef{thesis@toc@used@#1}{}}
+\def\thesis@toc@note#1{%
+  \ifcsname thesis@toc@seen@#1\endcsname\else
+    \csgdef{thesis@toc@seen@#1}{}%
+    \if@filesw\protected@write\@mainaux{}{\string\thesis@toc@register{#1}}\fi
+    \ifcsname thesis@toc@hidden@#1\endcsname
+      \thesis@warn{The list of '#1' was omitted as it was empty, it will appear with the next LaTeX pass}%
+    \fi
+  \fi
+}
+\long\def\thesis@addcontentsline#1#2#3{%
+  \thesis@toc@note{#1}\thesis@orig@addcontentsline{#1}{#2}{#3}%
+}
+\def\thesisHideEmptyList#1#2{%
+  \ifthesis@toc@complete
+    \ifcsname thesis@toc@used@#1\endcsname\else
+      \ifcsname #2\endcsname\csgdef{thesis@toc@hidden@#1}{}\csdef{#2}{}\fi
+    \fi
+  \fi
+}
+\ifthesis@hideEmptyLists
+\AddToHook{enddocument/afterlastpage}{%
+  \if@filesw\immediate\write\@mainaux{\string\thesis@toc@complete}\fi
+}
+\AddToHook{begindocument/end}{%
+  \let\thesis@orig@addcontentsline\addcontentsline
+  \let\addcontentsline\thesis@addcontentsline
+  \thesisHideEmptyList{lof}{listoffigures}%
+  \thesisHideEmptyList{lot}{listoftables}%
+  \thesisHideEmptyList{lol}{lstlistoflistings}%
+  \thesisHideEmptyList{lop}{listofpseudo}%
+}
+\fi
+% endregion
 
 % just my likings
 \AtBeginDocument{%

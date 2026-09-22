@@ -34,6 +34,8 @@
 \DeclareComplementaryOption{rmtitle}{sftitle}
 \DeclareBoolOption[true]{pageInFloatRef}
 \DeclareStringOption[auto]{floatRefSidenotes}
+\DeclareBoolOption[true]{hideEmptyLists}
+\DeclareComplementaryOption{showEmptyLists}{hideEmptyLists}
 
 % links
 \DeclareBoolOption[true]{hyperref}

@@ -186,7 +186,7 @@ You can load the other modules by using, for example, `\ThesisModule{authenticit
 | ✓  | [Tables](#tables)                                           | Configure the styling of tables                                                        | [tables.tex](_config/internal/tables.tex)             |
 | ✓  | [Task Description](#task-description)                       | Appends a signed task description and your proposal                                    | [proposal.tex](_config/internal/proposal.tex)         |
 | ✓  | [Titlepage](#titlepage)                                     | Styling for the titlepage                                                              | [titlepage.tex](_config/internal/titlepage.tex)       |
-| ✓  | [Translations](#translations)                               | Provide translation support for the template/document                                  | [translation.tex](_config/internal/translation.tex) |
+|  ✓  | [Translations](#translations)                               | Provide translation support for the template/document                             | [translation.tex](_config/internal/translation.tex)   |
 |    | [Units](#units)                                             | Provide support for (si-)units                                                         | [units.tex](_config/internal/units.tex)               |
 
 #### The Common Module
@@ -207,6 +207,7 @@ Of course, not all options are equally important. Those of importance are at the
 | `enhanceMath`     | true          | Load advanced math fonts (see [fonts](#fonts)).                                                                                                 |
 | `field`           | computer science | The field of study shown on the titlepage (translated by default).                                                                          |
 | `floatRefSidenotes` | auto        | Whether references to floats produce `on page` sidenotes. With `auto` they only appear if `pageInFloatRef` is `false`, as the `13A` numbering already encodes the page. |
+| `hideEmptyLists`  | true          | Omit `\listoffigures`, `\listoftables`, `\lstlistoflistings`, and `\listofpseudo` entirely (heading and page included) if they have no entries (see [floats](#empty-lists)). |
 | `license`         | CCBY          | The license to use for the document (see [licensing](#licensing)).                                                                             |
 | `pageInFloatRef`  | true          | This automatically activates the effects of the [floats module](#floats). If you set this to `false` you get the default LaTeX numbering.      |
 | `profile`         | tubs-isf      | The profile to use for the document.                                                                                                           |
@@ -229,6 +230,7 @@ Of course, not all options are equally important. Those of importance are at the
 | `print`           | false         | If set to true, the document will be compiled in print mode (complements the digital option).                                                  |
 | `rmtitle`         | true          | If set to false, the document will be compiled with a sans-serif title (see [fonts](#fonts), complements `sftitle`).                           |
 | `sftitle`         | false         | If set to true, the document will be compiled with a sans-serif title (see [fonts](#fonts), complements `rmtitle`).                            |
+| `showEmptyLists`  | false         | If set to true, empty lists of figures/tables/... are printed as usual (complements `hideEmptyLists`, see [floats](#empty-lists)).             |
 | `twoside`         | false         | If set to true, the document will be compiled in twoside mode (complements `oneside`).                                                         |
 
 <details>
@@ -264,6 +266,9 @@ flowchart TD
     layout --- marginpars{{marginpars}}
     marginpars --- marginpar("`<code>marginpar</code>`")
     marginpars --- nomarginpar("`<code>nomarginpar</code>`")
+    layout --- lists{{lists}}
+    lists --- hideEmptyLists("`<code>hideEmptyLists</code>`")
+    lists --- showEmptyLists("`<code>showEmptyLists</code>`")
     layout --- pages{{pages}}
     pages --- oneside("`<code>oneside</code>`")
     pages --- twoside("`<code>twoside</code>`")
@@ -389,7 +394,7 @@ Originally, this module provided much more, a huge collection of macros which th
 
 #### Floats
 
-This module uses the [caption](https://ctan.org/pkg/caption) and the [subcaption](https://ctan.org/pkg/subcaption) package to configure the styling of floating elements (figures, tables, ...). It also provides the `subfigure` environment to group figures together.
+This module uses the [caption](https://ctan.org/pkg/caption) and the [subcaption](https://ctan.org/pkg/subcaption) package to configure the styling of floating elements (figures, tables, ...). It also provides the `subfigure` environment to group figures together, as well as the `sidefig` and `sidetbl` environments (with the help of [environ][]) to place small floats [in the margin](#floats-in-the-margin).
 For example, it causes figures and tables to follow a non-standard numbering scheme which uses the page number as well as the occurrence count of a float of that type on that page. While this sounds complicated, `Figure 13A` simply states that this is the first figure on page&nbsp;13, `Figure 13B` would be the second, and so on (fight me on this being a much better naming scheme for floats).
 If you (for whatever unfathomable reason) dislike this scheme, the [document class option](#the-common-module) `pageInFloatRef` can be set to false to revert to the default LaTeX numbering.
 This still leaves you with the tools to register your own (see below), but disables the automatic hooks into the float environments.
@@ -439,6 +444,74 @@ Usually, the caption is placed above the table, to take the role of a "title". S
 See the [tables module](#tables) for more information on tables.
 
 </details>
+
+##### Floats in the Margin
+
+Small figures, tables, and listings do not have to take a float slot in the text body. The `sidefig`, `sidetbl`, and `sidefloat` environments typeset them into the [margin](#margin-paragraphs) instead:
+
+```latex
+\begin{sidefig}
+   \centering
+   \includegraphics[width=.8\linewidth]{img/example.pdf}
+   \caption{A figure within the margin.}
+   \label{fig:sidenote}
+\end{sidefig}
+```
+
+Both environments take the same optional argument as `\sidenote`, a vertical shift (`\begin{sidefig}[1.5\baselineskip]`), which helps to align the float with its surroundings.
+Their content is used just like the content of the corresponding `figure`/`table` environment: `\caption` (below the graphic for figures, above the content for tables), `\label`, and `\cref` all work as usual, the float is numbered with the same scheme.
+Note the differences to a normal float though:
+
+- These are *not* floating. They are typeset where you write them (the [scrlayer-notecolumn][] package may move them down if the margin is already occupied), so place them right at the paragraph that refers to them. There is no placement specifier (`[htbp]`).
+- The margin is narrow (`9.5em` by default), so size your graphics relative to `\linewidth` and keep tables small. Not everything has to be in the margin at any price.
+- If your graphic is small but important, please also do not move it into the margin as the margin is usually to contextualize the text, not to contain important standalone context.
+- The body is collected (via [environ][]) before it is typeset, so catcode-changing content such as `lstlisting` or `minted` does not survive it &mdash; use the starred variants below for that.
+- Captions are typeset in `\scriptsize` to match the rest of the margin. If you want to restyle them, redefine (or `\appto`) the `\thesissidefloathook` macro, which is executed inside every margin float before its body.
+
+If the margin is disabled (class option `nomarginpar`), they degrade into ordinary floats of their type with a `[htbp]` placement, so a document using them still compiles.
+
+The starred variants `sidefig*` and `sidetbl*` exist for verbatim content. Instead of collecting the body they write it verbatim (via [fancyvrb][]) to a `\jobname.sfl<n>` file which is `\input` again when the note is typeset, so listings work as expected:
+
+```latex
+\begin{sidefig*}
+\begin{lstlisting}[language=R]
+x <- c(1, 2)
+print(x)
+\end{lstlisting}
+\caption{A listing within the margin.}
+\label{fig:sidelst}
+\end{sidefig*}
+```
+
+They behave like the unstarred variants in every other respect but take **no** optional argument: [fancyvrb][] has to see the end of the `\begin{sidefig*}` line, and looking ahead for a `[` would consume it. If you need a vertical shift, add a `\vspace*{<len>}` at the start of the body instead. The `.sfl<n>` files are build artifacts, they are cleaned by `latexmk -c` and ignored by git.
+
+`sidefig` and `sidetbl` are just shorthands. The general form is `sidefloat`, which takes the float type as its last argument and works for any type the [caption](https://ctan.org/pkg/caption) package knows about &mdash; `lstlisting` and the `pseudo` float of the [pseudocode module](#pseudocode) included:
+
+```latex
+\begin{sidefloat*}{lstlisting}
+\begin{lstlisting}[language=R]
+print("hi")
+\end{lstlisting}
+\caption{A real listing in the margin.}
+\label{lst:sidelst}
+\end{sidefloat*}
+```
+
+| Environment                          | Type       | Body            |
+|:------------------------------------ |:---------- |:--------------- |
+| `\begin{sidefloat}[<shift>]{<type>}` | any        | collected       |
+| `\begin{sidefloat*}{<type>}`         | any        | verbatim safe   |
+| `\begin{sidefig}[<shift>]`           | figure     | collected       |
+| `\begin{sidefig*}`                   | figure     | verbatim safe   |
+| `\begin{sidetbl}[<shift>]`           | table      | collected       |
+| `\begin{sidetbl*}`                   | table      | verbatim safe   |
+
+##### Empty Lists
+
+By default (class option `hideEmptyLists`), `\listoffigures`, `\listoftables`, `\lstlistoflistings`, and `\listofpseudo` print nothing at all &mdash; no heading, no page &mdash; when they have no entries. This way you can keep all of them in your main document and only those you actually need show up. Set the [document class option](#the-common-module) `showEmptyLists` if you want the empty lists back.
+
+Which lists have entries is recorded in the `.aux` file, so a list that becomes non-empty needs one additional LaTeX pass to appear (the class tells you so in the log). To keep the first pass of a fresh document from being disrupted, nothing is hidden until a complete `.aux` file is available.
+If you register a list of your own, you can add it with `\thesisHideEmptyList{<file ext>}{<command name>}` (e.g. `\thesisHideEmptyList{lop}{listofpseudo}`) within `\AddToHook{begindocument/end}{...}`.
 
 At the moment, we have no detailed guide about how you can register your own floats to the new page ref counting mechanism. In short, you have to use `\InitPageCounter{<float>}` with (ideally) the name of your floating environment, add a new hook which uses `\CountThisPage{<float>}{c@<float>@lb}` to count the floats at the beginning of the environment (usually with something like `\AtBeginEnvironment{<float>}{\HookCustomEnvCount{<float file ext>}{<page count hook>}}`) and provide a counter rendering (`\the<float>` which usually relies on `\@formatcounter`). The [pseudo](#pseudocode) module provides an example for this, registering the `pseudo` float (see the [pseudocode.tex](_config/internal/pseudocode.tex) file).
 
@@ -563,6 +636,8 @@ The margin paragraphs module has the base control of over the sidebar, using a c
 - `\thesisinverseragged` can be used within the `\sidenote` content and reverses the automatic ragging of the text.
 - `\thesissidebarhook` is a macro which contains something that is to be executed within every sidebar note and you may use either `\appto\thesissidebarhook{...}` or `\preto\thesissidebarhook{...}` to append or prepend content to the hook.
 
+If you want to place a whole figure or table into the margin instead of a note, use the `sidefig`/`sidetbl` environments of the [floats module](#floats-in-the-margin) rather than building the note by hand.
+
 #### Page Layout
 
 This module uses the [geometry][] package to configure the main layout of the thesis (papersize, ...), applying binding correction, margins, marginpar width, and the like.
@@ -635,7 +710,9 @@ This module loads and configures [siunitx][] to provide you with a set of comman
 [doi-ba]: http://dx.doi.org/10.18725/OPARU-47275
 [doi-ma]: http://dx.doi.org/10.18725/OPARU-50107
 [enumitem]: https://ctan.org/pkg/enumitem
+[environ]: https://ctan.org/pkg/environ
 [float]: https://ctan.org/pkg/float
+[fancyvrb]: https://ctan.org/pkg/fancyvrb
 [fontawesome]: https://ctan.org/pkg/fontawesome
 [geometry]: https://ctan.org/pkg/geometry
 [graphicx]: https://ctan.org/pkg/graphicx

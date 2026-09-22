@@ -1,6 +1,8 @@
 # used by the l3build system
 build/
 *-SAVE-ERROR
+# verbatim bodies of sidefig*/sidetbl*
+*.sfl[0-9]*
 **/*[sS]ignature.[pP][nN][gG]
 **/*[sS]ignature.[jJ][pP][gG]
 **/*[sS]ignature.[jJ][pP][eE][gG]
