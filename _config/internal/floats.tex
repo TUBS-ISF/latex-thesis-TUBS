@@ -63,7 +63,6 @@
 \ifthesis@pageInFloatRef
 \def\thesis@figure{figure}\def\thesis@table{table}\def\thesis@lstlisting{lstlisting}
 \def\thesis@subfigure{subfigure}
-\newif\ifthesis@floatcounted
 % a float claims its number as soon as it starts (so that subcaptions can refer to it),
 % but a float without any caption must not consume one -- we therefore remember what the
 % float claimed and roll the claim back if no caption ever used it (this also covers
