@@ -165,6 +165,26 @@ print(x)
 
 We can reference code as well, see: \cref{jeah}.
 
+Verbatim content such as a listing does not survive the way \texttt{sidefig} collects its body, which is what the starred \texttt{sidefig*} and \texttt{sidetbl*} environments are for.
+\begin{sidefig*}
+\begin{lstlisting}[language=R]
+x <- c(1, 2)
+print(x)
+\end{lstlisting}
+\caption{A listing within the margin.}
+\label{fig:sidelst}
+\end{sidefig*}
+They take no vertical shift, everything else works as before.
+Any other float type is available with \texttt{sidefloat} and \texttt{sidefloat*}, which take the type as an argument, so a listing can be a listing as well (see \cref{lst:sidelst}).
+\begin{sidefloat*}{lstlisting}
+\xlstsetmintedstyle{plain}
+\begin{minted}{R}
+print("hi")
+\end{minted}
+\caption{A real listing in the margin.}
+\label{lst:sidelst}
+\end{sidefloat*}
+
 This starts the paragraph.
 \aiquote{GPT-5.2}{
     Generate a text snippets that symbolizes AI usage based on the ISF AI guidelines.
